@@ -88,6 +88,7 @@ export default function RegisterPage() {
       parent_phone: form.parentPhone,
       emergency_contact: form.emergencyContact,
       status: 'pending',
+      role: 'player',
     })
 
     if (profileError) {

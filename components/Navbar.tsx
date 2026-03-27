@@ -17,15 +17,29 @@ export default function Navbar() {
   const [open, setOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const [user, setUser] = useState<User | null>(null)
+  const [isAdmin, setIsAdmin] = useState(false)
   const pathname = usePathname()
   const router = useRouter()
   const supabase = createClient()
 
   useEffect(() => {
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_, session) => {
-      setUser(session?.user ?? null)
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_, session) => {
+      const u = session?.user ?? null
+      setUser(u)
+      if (u) {
+        const { data } = await supabase.from('profiles').select('role').eq('id', u.id).single()
+        setIsAdmin(data?.role === 'admin')
+      } else {
+        setIsAdmin(false)
+      }
     })
-    supabase.auth.getUser().then(({ data }) => setUser(data.user))
+    supabase.auth.getUser().then(async ({ data }) => {
+      setUser(data.user)
+      if (data.user) {
+        const { data: profile } = await supabase.from('profiles').select('role').eq('id', data.user.id).single()
+        setIsAdmin(profile?.role === 'admin')
+      }
+    })
     return () => subscription.unsubscribe()
   }, [supabase])
 
@@ -84,6 +98,14 @@ export default function Navbar() {
           <div className="hidden md:flex items-center gap-3">
             {user ? (
               <>
+                {isAdmin && (
+                  <Link
+                    href="/admin"
+                    className="px-4 py-2 text-sm font-semibold text-orange-500 hover:text-orange-400 transition-colors"
+                  >
+                    Admin
+                  </Link>
+                )}
                 <Link
                   href="/dashboard"
                   className="px-4 py-2 text-sm font-semibold text-white hover:text-orange-500 transition-colors"
@@ -145,6 +167,11 @@ export default function Navbar() {
           <div className="pt-3 mt-2 border-t border-white/10">
             {user ? (
               <>
+                {isAdmin && (
+                  <Link href="/admin" className="block px-3 py-3 text-sm font-semibold text-orange-500 hover:text-orange-400">
+                    Admin Dashboard
+                  </Link>
+                )}
                 <Link href="/dashboard" className="block px-3 py-3 text-sm font-semibold text-white hover:text-orange-500">
                   Dashboard
                 </Link>
