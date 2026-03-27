@@ -1,8 +1,9 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
+import HCaptcha from '@hcaptcha/react-hcaptcha'
 import { createClient } from '@/lib/supabase/client'
 
 const positions = ['Goalkeeper', 'Defender', 'Midfielder', 'Forward']
@@ -12,6 +13,8 @@ export default function RegisterPage() {
   const [step, setStep] = useState(1)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const [captchaToken, setCaptchaToken] = useState('')
+  const captchaRef = useRef<HCaptcha>(null)
 
   const [form, setForm] = useState({
     email: '',
@@ -53,6 +56,11 @@ export default function RegisterPage() {
       return
     }
 
+    if (!captchaToken) {
+      setError('Please complete the CAPTCHA.')
+      return
+    }
+
     setLoading(true)
 
     // Create auth user
@@ -60,6 +68,7 @@ export default function RegisterPage() {
       email: form.email,
       password: form.password,
       options: {
+        captchaToken,
         data: {
           first_name: form.firstName,
           last_name: form.lastName,
@@ -69,6 +78,8 @@ export default function RegisterPage() {
 
     if (authError || !authData.user) {
       setError(authError?.message ?? 'Registration failed. Please try again.')
+      captchaRef.current?.resetCaptcha()
+      setCaptchaToken('')
       setLoading(false)
       return
     }
@@ -301,6 +312,17 @@ export default function RegisterPage() {
                   </div>
                 </div>
 
+                {/* hCaptcha */}
+                <div className="flex justify-center pt-2">
+                  <HCaptcha
+                    ref={captchaRef}
+                    sitekey={process.env.NEXT_PUBLIC_HCAPTCHA_SITE_KEY!}
+                    onVerify={token => setCaptchaToken(token)}
+                    onExpire={() => setCaptchaToken('')}
+                    theme="dark"
+                  />
+                </div>
+
                 <div className="flex gap-3 pt-2">
                   <button
                     type="button"
@@ -311,8 +333,8 @@ export default function RegisterPage() {
                   </button>
                   <button
                     type="submit"
-                    disabled={loading}
-                    className="flex-1 py-3 bg-orange-500 hover:bg-orange-600 disabled:opacity-60 text-white font-bold uppercase tracking-wider rounded-lg transition-colors"
+                    disabled={loading || !captchaToken}
+                    className="flex-1 py-3 bg-orange-500 hover:bg-orange-600 disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold uppercase tracking-wider rounded-lg transition-colors"
                   >
                     {loading ? 'Registering...' : 'Register'}
                   </button>
