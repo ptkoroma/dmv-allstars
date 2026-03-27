@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DMV All Stars FC — Site Documentation</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --orange: #f97316;
+      --orange-dark: #ea6c0a;
+      --bg: #0a0a0a;
+      --bg2: #111111;
+      --bg3: #1a1a1a;
+      --border: rgba(255,255,255,0.07);
+      --text: #ffffff;
+      --muted: #9ca3af;
+      --red: #ef4444;
+      --green: #22c55e;
+      --yellow: #eab308;
+      --blue: #3b82f6;
+    }
+
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 15px; line-height: 1.6; }
+
+    /* ── LAYOUT ── */
+    .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+    section { padding: 72px 0; }
+    section + section { border-top: 1px solid var(--border); }
+
+    /* ── HEADER ── */
+    header {
+      background: var(--bg2);
+      border-bottom: 1px solid var(--border);
+      padding: 28px 0;
+      position: sticky; top: 0; z-index: 100;
+      backdrop-filter: blur(12px);
+    }
+    header .inner { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+    .logo { display: flex; align-items: center; gap: 12px; }
+    .logo-icon { width: 44px; height: 44px; border-radius: 50%; border: 2px solid var(--orange); display: flex; align-items: center; justify-content: center; background: rgba(249,115,22,0.1); font-weight: 900; color: var(--orange); font-size: 11px; }
+    .logo-text { font-weight: 900; font-size: 15px; }
+    .logo-sub { color: var(--orange); font-size: 11px; letter-spacing: 0.15em; font-weight: 600; }
+    .doc-badge { background: rgba(249,115,22,0.15); border: 1px solid rgba(249,115,22,0.3); color: var(--orange); padding: 4px 12px; border-radius: 999px; font-size: 12px; font-weight: 600; letter-spacing: 0.05em; }
+
+    /* ── NAV ── */
+    nav.toc { background: var(--bg3); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin-bottom: 60px; }
+    nav.toc h3 { font-size: 11px; text-transform: uppercase; letter-spacing: 0.15em; color: var(--muted); margin-bottom: 16px; }
+    nav.toc ol { padding-left: 20px; display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 6px; }
+    nav.toc a { color: var(--muted); text-decoration: none; font-size: 14px; transition: color 0.2s; }
+    nav.toc a:hover { color: var(--orange); }
+
+    /* ── TYPOGRAPHY ── */
+    h1 { font-size: clamp(28px, 5vw, 42px); font-weight: 900; line-height: 1.1; }
+    h2 { font-size: clamp(22px, 3vw, 30px); font-weight: 900; margin-bottom: 8px; }
+    h3 { font-size: 18px; font-weight: 700; margin-bottom: 8px; }
+    h4 { font-size: 13px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); margin-bottom: 12px; font-weight: 600; }
+    p { color: #d1d5db; margin-bottom: 14px; }
+    .orange { color: var(--orange); }
+    .hero-sub { color: var(--muted); font-size: 16px; max-width: 620px; margin-top: 12px; }
+
+    /* ── HERO ── */
+    .hero { padding: 80px 0 60px; }
+    .hero-meta { display: flex; gap: 16px; margin-top: 28px; flex-wrap: wrap; }
+    .meta-pill { display: flex; align-items: center; gap: 8px; background: var(--bg3); border: 1px solid var(--border); padding: 6px 14px; border-radius: 999px; font-size: 13px; color: var(--muted); }
+    .meta-pill span { font-weight: 600; color: var(--text); }
+
+    /* ── CARDS ── */
+    .card { background: var(--bg3); border: 1px solid var(--border); border-radius: 16px; padding: 28px; }
+    .card-grid { display: grid; gap: 20px; }
+    .card-grid.col2 { grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); }
+    .card-grid.col3 { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); }
+    .card h3 { margin-bottom: 10px; }
+    .card p { font-size: 14px; color: var(--muted); margin: 0; }
+
+    /* ── SECTION HEADERS ── */
+    .section-header { margin-bottom: 40px; }
+    .section-tag { display: inline-block; background: rgba(249,115,22,0.12); color: var(--orange); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em; padding: 4px 12px; border-radius: 999px; margin-bottom: 10px; }
+
+    /* ── SEVERITY BADGES ── */
+    .badge { display: inline-flex; align-items: center; gap: 5px; padding: 3px 10px; border-radius: 999px; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; }
+    .badge.high { background: rgba(239,68,68,0.15); color: #f87171; border: 1px solid rgba(239,68,68,0.3); }
+    .badge.medium { background: rgba(234,179,8,0.15); color: #facc15; border: 1px solid rgba(234,179,8,0.3); }
+    .badge.low { background: rgba(34,197,94,0.1); color: #4ade80; border: 1px solid rgba(34,197,94,0.2); }
+    .badge.info { background: rgba(59,130,246,0.1); color: #60a5fa; border: 1px solid rgba(59,130,246,0.2); }
+    .badge::before { content: '●'; font-size: 8px; }
+
+    /* ── SECURITY FINDINGS ── */
+    .finding { background: var(--bg3); border: 1px solid var(--border); border-radius: 12px; padding: 22px 24px; margin-bottom: 16px; border-left: 3px solid transparent; }
+    .finding.high { border-left-color: var(--red); }
+    .finding.medium { border-left-color: var(--yellow); }
+    .finding.low { border-left-color: var(--green); }
+    .finding.info { border-left-color: var(--blue); }
+    .finding-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 12px; flex-wrap: wrap; }
+    .finding h3 { font-size: 16px; margin: 0; }
+    .finding-body p { font-size: 14px; color: var(--muted); margin-bottom: 10px; }
+    .finding-body p:last-child { margin: 0; }
+    .label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--orange); margin-bottom: 4px; }
+    code { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); border-radius: 5px; padding: 2px 7px; font-family: 'SF Mono', monospace; font-size: 13px; color: #e2e8f0; }
+
+    /* ── SEO TABLE ── */
+    table { width: 100%; border-collapse: collapse; font-size: 14px; }
+    th { text-align: left; padding: 10px 14px; background: rgba(255,255,255,0.04); color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; border-bottom: 1px solid var(--border); }
+    td { padding: 12px 14px; border-bottom: 1px solid rgba(255,255,255,0.04); vertical-align: top; color: #d1d5db; }
+    tr:last-child td { border-bottom: none; }
+    .status-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 6px; }
+    .dot-red { background: var(--red); }
+    .dot-yellow { background: var(--yellow); }
+    .dot-green { background: var(--green); }
+
+    /* ── TECH STACK ── */
+    .stack-item { display: flex; align-items: center; gap: 14px; padding: 14px 0; border-bottom: 1px solid rgba(255,255,255,0.04); }
+    .stack-item:last-child { border: none; }
+    .stack-icon { width: 36px; height: 36px; border-radius: 8px; background: rgba(249,115,22,0.1); border: 1px solid rgba(249,115,22,0.2); display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+    .stack-name { font-weight: 700; font-size: 15px; }
+    .stack-desc { font-size: 13px; color: var(--muted); }
+
+    /* ── RECOMMENDATION BOX ── */
+    .rec { background: rgba(249,115,22,0.06); border: 1px solid rgba(249,115,22,0.2); border-radius: 10px; padding: 16px 20px; margin-top: 12px; }
+    .rec p { font-size: 13px; color: #d1d5db; margin: 0; }
+    .rec code { background: rgba(249,115,22,0.1); border-color: rgba(249,115,22,0.2); color: var(--orange); }
+
+    /* ── CHECKLIST ── */
+    .checklist { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+    .checklist li { display: flex; align-items: flex-start; gap: 10px; font-size: 14px; color: #d1d5db; }
+    .checklist li::before { content: '✓'; color: var(--orange); font-weight: 900; flex-shrink: 0; margin-top: 1px; }
+
+    /* ── FLOW DIAGRAM ── */
+    .diagram-wrap { background: var(--bg3); border: 1px solid var(--border); border-radius: 20px; padding: 40px 24px; overflow-x: auto; }
+
+    /* ── FOOTER ── */
+    footer { background: var(--bg2); border-top: 1px solid var(--border); padding: 32px 0; text-align: center; color: var(--muted); font-size: 13px; }
+    footer strong { color: var(--orange); }
+
+    @media (max-width: 640px) {
+      section { padding: 48px 0; }
+      .card-grid.col2, .card-grid.col3 { grid-template-columns: 1fr; }
+      nav.toc ol { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="container inner">
+    <div class="logo">
+      <div class="logo-icon">DMV</div>
+      <div>
+        <div class="logo-text">DMV All Stars FC</div>
+        <div class="logo-sub">FC · EST. 2015</div>
+      </div>
+    </div>
+    <div class="doc-badge">Site Documentation</div>
+  </div>
+</header>
+
+<div class="container">
+
+  <!-- HERO -->
+  <div class="hero">
+    <h1>How the Site Works<br><span class="orange">— Full Technical Overview</span></h1>
+    <p class="hero-sub">A complete reference covering site architecture, user flows, security analysis, and SEO recommendations for the DMV All Stars FC web platform.</p>
+    <div class="hero-meta">
+      <div class="meta-pill">Live URL <span>dmv-allstars.com</span></div>
+      <div class="meta-pill">Framework <span>Next.js 16</span></div>
+      <div class="meta-pill">Database <span>Supabase</span></div>
+      <div class="meta-pill">Hosted on <span>Vercel</span></div>
+      <div class="meta-pill">Repo <span>ptkoroma/dmv-allstars</span></div>
+    </div>
+  </div>
+
+  <!-- TABLE OF CONTENTS -->
+  <nav class="toc">
+    <h3>Contents</h3>
+    <ol>
+      <li><a href="#architecture">1. Architecture Overview</a></li>
+      <li><a href="#pages">2. Pages & Routes</a></li>
+      <li><a href="#infographic">3. How It Works — Infographic</a></li>
+      <li><a href="#auth-flow">4. Authentication Flow</a></li>
+      <li><a href="#security">5. Security Audit</a></li>
+      <li><a href="#recommendations">6. Security Recommendations</a></li>
+      <li><a href="#seo">7. SEO Recommendations</a></li>
+      <li><a href="#stack">8. Technology Stack</a></li>
+    </ol>
+  </nav>
+
+  <!-- 1. ARCHITECTURE -->
+  <section id="architecture">
+    <div class="section-header">
+      <div class="section-tag">Section 1</div>
+      <h2>Architecture <span class="orange">Overview</span></h2>
+      <p>The site is a full-stack web application built on three layers: a Next.js frontend/backend, Supabase for authentication and data, and Vercel for hosting.</p>
+    </div>
+    <div class="card-grid col3">
+      <div class="card">
+        <h3>⚡ Next.js 16</h3>
+        <p>App Router with server and client components. Server Components fetch data; Client Components handle interactions. Route protection via <code>proxy.ts</code>.</p>
+      </div>
+      <div class="card">
+        <h3>🗄️ Supabase</h3>
+        <p>Handles user authentication (JWT sessions), the <code>profiles</code> database table, Row Level Security policies, and hCaptcha token verification.</p>
+      </div>
+      <div class="card">
+        <h3>🌐 Vercel</h3>
+        <p>Serverless hosting with auto-deploy on every GitHub push. Static pages are prerendered at build time; dynamic pages render on demand per request.</p>
+      </div>
+      <div class="card">
+        <h3>🔒 Row Level Security</h3>
+        <p>Database enforces that each player can only read and write their own profile row. Admins bypass this via the <code>is_admin()</code> function.</p>
+      </div>
+      <div class="card">
+        <h3>🤖 hCaptcha</h3>
+        <p>Bot protection on login and registration. The token is generated client-side, then verified server-side by Supabase before auth operations complete.</p>
+      </div>
+      <div class="card">
+        <h3>📦 GitHub</h3>
+        <p>Source code at <code>ptkoroma/dmv-allstars</code>. Every push to the <code>develop</code> branch triggers an automatic Vercel deployment.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. PAGES -->
+  <section id="pages">
+    <div class="section-header">
+      <div class="section-tag">Section 2</div>
+      <h2>Pages <span class="orange">&amp; Routes</span></h2>
+    </div>
+    <table>
+      <thead>
+        <tr><th>Route</th><th>Access</th><th>Rendering</th><th>Purpose</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>/</code></td><td>Public</td><td>Static</td><td>Homepage — hero, stats, features, CTA</td></tr>
+        <tr><td><code>/about</code></td><td>Public</td><td>Static</td><td>Team history, mission, coaching staff</td></tr>
+        <tr><td><code>/gallery</code></td><td>Public</td><td>Static</td><td>Filterable photo gallery</td></tr>
+        <tr><td><code>/contact</code></td><td>Public</td><td>Static</td><td>Contact form and club info</td></tr>
+        <tr><td><code>/login</code></td><td>Guests only</td><td>Static</td><td>Email/password sign-in with hCaptcha</td></tr>
+        <tr><td><code>/register</code></td><td>Guests only</td><td>Static</td><td>2-step player registration with hCaptcha</td></tr>
+        <tr><td><code>/dashboard</code></td><td>Authenticated</td><td>Dynamic</td><td>Player's own profile — view and edit</td></tr>
+        <tr><td><code>/admin</code></td><td>Admin role only</td><td>Dynamic</td><td>All players list, status/role management</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- 3. INFOGRAPHIC -->
+  <section id="infographic">
+    <div class="section-header">
+      <div class="section-tag">Section 3</div>
+      <h2>How It Works <span class="orange">— Infographic</span></h2>
+    </div>
+    <div class="diagram-wrap">
+      <svg viewBox="0 0 1000 620" xmlns="http://www.w3.org/2000/svg" style="width:100%;min-width:700px;display:block;">
+        <defs>
+          <marker id="arrow" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+            <polygon points="0 0, 8 3, 0 6" fill="#f97316" opacity="0.8"/>
+          </marker>
+          <marker id="arrow-gray" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+            <polygon points="0 0, 8 3, 0 6" fill="#4b5563" opacity="0.8"/>
+          </marker>
+          <filter id="glow">
+            <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+            <feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+        </defs>
+
+        <!-- Background lanes -->
+        <rect x="0" y="0" width="1000" height="620" fill="#111111" rx="12"/>
+
+        <!-- Lane labels -->
+        <text x="500" y="30" text-anchor="middle" fill="#4b5563" font-size="11" font-family="sans-serif" letter-spacing="3" font-weight="600">USER JOURNEY &amp; SYSTEM ARCHITECTURE</text>
+
+        <!-- User Types Row -->
+        <!-- Visitor -->
+        <rect x="30" y="55" width="130" height="60" rx="10" fill="#1a1a1a" stroke="#374151" stroke-width="1.5"/>
+        <text x="95" y="80" text-anchor="middle" fill="#9ca3af" font-size="22" font-family="sans-serif">👤</text>
+        <text x="95" y="103" text-anchor="middle" fill="#9ca3af" font-size="12" font-family="sans-serif" font-weight="600">VISITOR</text>
+
+        <!-- Player -->
+        <rect x="190" y="55" width="130" height="60" rx="10" fill="#1a1a1a" stroke="#f97316" stroke-width="1.5" filter="url(#glow)"/>
+        <text x="255" y="80" text-anchor="middle" fill="#f97316" font-size="22" font-family="sans-serif">⚽</text>
+        <text x="255" y="103" text-anchor="middle" fill="#f97316" font-size="12" font-family="sans-serif" font-weight="600">PLAYER</text>
+
+        <!-- Admin -->
+        <rect x="350" y="55" width="130" height="60" rx="10" fill="#1a1a1a" stroke="#a855f7" stroke-width="1.5"/>
+        <text x="415" y="80" text-anchor="middle" fill="#a855f7" font-size="22" font-family="sans-serif">🛡️</text>
+        <text x="415" y="103" text-anchor="middle" fill="#a855f7" font-size="12" font-family="sans-serif" font-weight="600">ADMIN</text>
+
+        <!-- Tech Stack Box -->
+        <rect x="540" y="45" width="430" height="90" rx="12" fill="#1a1a1a" stroke="#374151" stroke-width="1"/>
+        <text x="755" y="68" text-anchor="middle" fill="#6b7280" font-size="10" font-family="sans-serif" letter-spacing="2" font-weight="700">TECH STACK</text>
+        <rect x="560" y="78" width="90" height="38" rx="8" fill="rgba(249,115,22,0.1)" stroke="rgba(249,115,22,0.3)" stroke-width="1"/>
+        <text x="605" y="97" text-anchor="middle" fill="#f97316" font-size="10" font-family="sans-serif" font-weight="700">Next.js 16</text>
+        <text x="605" y="110" text-anchor="middle" fill="#6b7280" font-size="9" font-family="sans-serif">App Router</text>
+        <rect x="663" y="78" width="90" height="38" rx="8" fill="rgba(34,197,94,0.08)" stroke="rgba(34,197,94,0.25)" stroke-width="1"/>
+        <text x="708" y="97" text-anchor="middle" fill="#4ade80" font-size="10" font-family="sans-serif" font-weight="700">Supabase</text>
+        <text x="708" y="110" text-anchor="middle" fill="#6b7280" font-size="9" font-family="sans-serif">Auth + DB</text>
+        <rect x="766" y="78" width="90" height="38" rx="8" fill="rgba(59,130,246,0.08)" stroke="rgba(59,130,246,0.25)" stroke-width="1"/>
+        <text x="811" y="97" text-anchor="middle" fill="#60a5fa" font-size="10" font-family="sans-serif" font-weight="700">Vercel</text>
+        <text x="811" y="110" text-anchor="middle" fill="#6b7280" font-size="9" font-family="sans-serif">Hosting</text>
+        <rect x="869" y="78" width="90" height="38" rx="8" fill="rgba(168,85,247,0.08)" stroke="rgba(168,85,247,0.25)" stroke-width="1"/>
+        <text x="914" y="97" text-anchor="middle" fill="#c084fc" font-size="10" font-family="sans-serif" font-weight="700">hCaptcha</text>
+        <text x="914" y="110" text-anchor="middle" fill="#6b7280" font-size="9" font-family="sans-serif">Bot Protection</text>
+
+        <!-- ── VISITOR FLOW ── -->
+        <!-- Browse Public Pages -->
+        <rect x="30" y="160" width="130" height="50" rx="8" fill="#1a1a1a" stroke="#374151" stroke-width="1"/>
+        <text x="95" y="181" text-anchor="middle" fill="#d1d5db" font-size="11" font-family="sans-serif" font-weight="600">Browse Site</text>
+        <text x="95" y="196" text-anchor="middle" fill="#6b7280" font-size="10" font-family="sans-serif">Home / About</text>
+        <text x="95" y="208" text-anchor="middle" fill="#6b7280" font-size="10" font-family="sans-serif">Gallery / Contact</text>
+        <line x1="95" y1="115" x2="95" y2="160" stroke="#374151" stroke-width="1.5" marker-end="url(#arrow-gray)" stroke-dasharray="5,3"/>
+
+        <!-- CTA Register -->
+        <rect x="30" y="255" width="130" height="40" rx="8" fill="#1a1a1a" stroke="#374151" stroke-width="1"/>
+        <text x="95" y="270" text-anchor="middle" fill="#d1d5db" font-size="11" font-family="sans-serif" font-weight="600">Clicks Register</text>
+        <text x="95" y="285" text-anchor="middle" fill="#6b7280" font-size="10" font-family="sans-serif">/register →</text>
+        <line x1="95" y1="210" x2="95" y2="255" stroke="#374151" stroke-width="1.5" marker-end="url(#arrow-gray)" stroke-dasharray="5,3"/>
+
+        <!-- ── PLAYER REGISTRATION FLOW ── -->
+        <!-- Step 1 -->
+        <rect x="190" y="160" width="130" height="50" rx="8" fill="rgba(249,115,22,0.08)" stroke="rgba(249,115,22,0.35)" stroke-width="1.5"/>
+        <text x="255" y="179" text-anchor="middle" fill="#fb923c" font-size="11" font-family="sans-serif" font-weight="700">Step 1</text>
+        <text x="255" y="194" text-anchor="middle" fill="#d1d5db" font-size="10" font-family="sans-serif">Name, Email,</text>
+        <text x="255" y="207" text-anchor="middle" fill="#d1d5db" font-size="10" font-family="sans-serif">Password</text>
+        <line x1="160" y1="290" x2="190" y2="185" stroke="#f97316" stroke-width="1.5" marker-end="url(#arrow)" stroke-dasharray="5,3"/>
+
+        <!-- Step 2 -->
+        <rect x="190" y="255" width="130" height="60" rx="8" fill="rgba(249,115,22,0.08)" stroke="rgba(249,115,22,0.35)" stroke-width="1.5"/>
+        <text x="255" y="273" text-anchor="middle" fill="#fb923c" font-size="11" font-family="sans-serif" font-weight="700">Step 2</text>
+        <text x="255" y="288" text-anchor="middle" fill="#d1d5db" font-size="10" font-family="sans-serif">Position, Age,</text>
+        <text x="255" y="301" text-anchor="middle" fill="#d1d5db" font-size="10" font-family="sans-serif">Experience</text>
+        <text x="255" y="314" text-anchor="middle" fill="#f97316" font-size="10" font-family="sans-serif" font-weight="600">+ hCaptcha ✓</text>
+        <line x1="255" y1="210" x2="255" y2="255" stroke="#f97316" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+        <!-- Supabase Auth -->
+        <rect x="190" y="365" width="130" height="50" rx="8" fill="rgba(34,197,94,0.08)" stroke="rgba(34,197,94,0.3)" stroke-width="1.5"/>
+        <text x="255" y="383" text-anchor="middle" fill="#4ade80" font-size="11" font-family="sans-serif" font-weight="700">Supabase Auth</text>
+        <text x="255" y="398" text-anchor="middle" fill="#d1d5db" font-size="10" font-family="sans-serif">Creates user +</text>
+        <text x="255" y="411" text-anchor="middle" fill="#d1d5db" font-size="10" font-family="sans-serif">profiles row</text>
+        <line x1="255" y1="315" x2="255" y2="365" stroke="#f97316" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+        <!-- Dashboard -->
+        <rect x="190" y="460" width="130" height="45" rx="8" fill="rgba(249,115,22,0.1)" stroke="rgba(249,115,22,0.4)" stroke-width="1.5"/>
+        <text x="255" y="479" text-anchor="middle" fill="#f97316" font-size="11" font-family="sans-serif" font-weight="700">🏠 /dashboard</text>
+        <text x="255" y="494" text-anchor="middle" fill="#d1d5db" font-size="10" font-family="sans-serif">Own profile only</text>
+        <line x1="255" y1="415" x2="255" y2="460" stroke="#f97316" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+        <!-- ── LOGIN FLOW ── -->
+        <rect x="350" y="160" width="130" height="60" rx="8" fill="rgba(249,115,22,0.06)" stroke="#374151" stroke-width="1.5"/>
+        <text x="415" y="179" text-anchor="middle" fill="#d1d5db" font-size="11" font-family="sans-serif" font-weight="600">/login</text>
+        <text x="415" y="195" text-anchor="middle" fill="#d1d5db" font-size="10" font-family="sans-serif">Email + Password</text>
+        <text x="415" y="210" text-anchor="middle" fill="#f97316" font-size="10" font-family="sans-serif" font-weight="600">+ hCaptcha ✓</text>
+        <line x1="415" y1="115" x2="415" y2="160" stroke="#a855f7" stroke-width="1.5" marker-end="url(#arrow)" stroke-dasharray="5,3"/>
+
+        <!-- proxy.ts check -->
+        <rect x="350" y="265" width="130" height="50" rx="8" fill="rgba(239,68,68,0.08)" stroke="rgba(239,68,68,0.3)" stroke-width="1.5"/>
+        <text x="415" y="284" text-anchor="middle" fill="#f87171" font-size="11" font-family="sans-serif" font-weight="700">proxy.ts</text>
+        <text x="415" y="299" text-anchor="middle" fill="#d1d5db" font-size="10" font-family="sans-serif">Verifies JWT</text>
+        <text x="415" y="312" text-anchor="middle" fill="#d1d5db" font-size="10" font-family="sans-serif">session cookie</text>
+        <line x1="415" y1="220" x2="415" y2="265" stroke="#f97316" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+        <!-- Role check -->
+        <rect x="350" y="360" width="130" height="50" rx="8" fill="#1a1a1a" stroke="#374151" stroke-width="1.5"/>
+        <text x="415" y="379" text-anchor="middle" fill="#d1d5db" font-size="11" font-family="sans-serif" font-weight="600">Role Check</text>
+        <text x="415" y="394" text-anchor="middle" fill="#6b7280" font-size="10" font-family="sans-serif">admin?</text>
+        <text x="415" y="407" text-anchor="middle" fill="#6b7280" font-size="10" font-family="sans-serif">player?</text>
+        <line x1="415" y1="315" x2="415" y2="360" stroke="#f97316" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+        <!-- admin route -->
+        <rect x="350" y="460" width="130" height="45" rx="8" fill="rgba(168,85,247,0.1)" stroke="rgba(168,85,247,0.4)" stroke-width="1.5"/>
+        <text x="415" y="479" text-anchor="middle" fill="#c084fc" font-size="11" font-family="sans-serif" font-weight="700">🛡️ /admin</text>
+        <text x="415" y="494" text-anchor="middle" fill="#d1d5db" font-size="10" font-family="sans-serif">All players</text>
+        <line x1="415" y1="410" x2="415" y2="460" stroke="#a855f7" stroke-width="1.5" marker-end="url(#arrow)"/>
+        <!-- player → dashboard arrow from role check -->
+        <path d="M350,385 C290,385 285,477 320,477" stroke="#f97316" stroke-width="1.5" fill="none" marker-end="url(#arrow)" stroke-dasharray="5,3"/>
+
+        <!-- ── SUPABASE COLUMN ── -->
+        <rect x="540" y="160" width="200" height="345" rx="12" fill="rgba(34,197,94,0.04)" stroke="rgba(34,197,94,0.2)" stroke-width="1.5"/>
+        <text x="640" y="183" text-anchor="middle" fill="#4ade80" font-size="12" font-family="sans-serif" font-weight="700" letter-spacing="1">SUPABASE</text>
+
+        <!-- auth.users -->
+        <rect x="558" y="195" width="166" height="50" rx="8" fill="#1a1a1a" stroke="rgba(34,197,94,0.3)" stroke-width="1"/>
+        <text x="641" y="215" text-anchor="middle" fill="#4ade80" font-size="11" font-family="sans-serif" font-weight="600">auth.users</text>
+        <text x="641" y="230" text-anchor="middle" fill="#6b7280" font-size="10" font-family="sans-serif">email, password hash, JWT</text>
+        <text x="641" y="242" text-anchor="middle" fill="#6b7280" font-size="10" font-family="sans-serif">session management</text>
+
+        <!-- profiles table -->
+        <rect x="558" y="260" width="166" height="70" rx="8" fill="#1a1a1a" stroke="rgba(34,197,94,0.3)" stroke-width="1"/>
+        <text x="641" y="280" text-anchor="middle" fill="#4ade80" font-size="11" font-family="sans-serif" font-weight="600">profiles table</text>
+        <text x="641" y="295" text-anchor="middle" fill="#6b7280" font-size="10" font-family="sans-serif">first_name, last_name</text>
+        <text x="641" y="308" text-anchor="middle" fill="#6b7280" font-size="10" font-family="sans-serif">position, age_group, role</text>
+        <text x="641" y="321" text-anchor="middle" fill="#6b7280" font-size="10" font-family="sans-serif">status, experience_years</text>
+
+        <!-- RLS -->
+        <rect x="558" y="345" width="166" height="50" rx="8" fill="rgba(239,68,68,0.06)" stroke="rgba(239,68,68,0.25)" stroke-width="1"/>
+        <text x="641" y="365" text-anchor="middle" fill="#f87171" font-size="11" font-family="sans-serif" font-weight="600">Row Level Security</text>
+        <text x="641" y="380" text-anchor="middle" fill="#6b7280" font-size="10" font-family="sans-serif">SELECT / UPDATE own row</text>
+        <text x="641" y="392" text-anchor="middle" fill="#6b7280" font-size="10" font-family="sans-serif">admins bypass via is_admin()</text>
+
+        <!-- hCaptcha verify -->
+        <rect x="558" y="410" width="166" height="40" rx="8" fill="rgba(168,85,247,0.06)" stroke="rgba(168,85,247,0.2)" stroke-width="1"/>
+        <text x="641" y="427" text-anchor="middle" fill="#c084fc" font-size="11" font-family="sans-serif" font-weight="600">hCaptcha Verify</text>
+        <text x="641" y="442" text-anchor="middle" fill="#6b7280" font-size="10" font-family="sans-serif">server-side token check</text>
+
+        <!-- Arrows into Supabase -->
+        <line x1="480" y1="415" x2="558" y2="415" stroke="rgba(249,115,22,0.5)" stroke-width="1.5" marker-end="url(#arrow)" stroke-dasharray="4,3"/>
+        <line x1="320" y1="390" x2="558" y2="360" stroke="rgba(34,197,94,0.4)" stroke-width="1.5" marker-end="url(#arrow)" stroke-dasharray="4,3"/>
+
+        <!-- ── VERCEL / CDN ── -->
+        <rect x="780" y="160" width="185" height="345" rx="12" fill="rgba(59,130,246,0.04)" stroke="rgba(59,130,246,0.2)" stroke-width="1.5"/>
+        <text x="872" y="183" text-anchor="middle" fill="#60a5fa" font-size="12" font-family="sans-serif" font-weight="700" letter-spacing="1">VERCEL / CDN</text>
+
+        <rect x="798" y="195" width="150" height="40" rx="8" fill="#1a1a1a" stroke="rgba(59,130,246,0.3)" stroke-width="1"/>
+        <text x="873" y="212" text-anchor="middle" fill="#60a5fa" font-size="11" font-family="sans-serif" font-weight="600">Static Pages</text>
+        <text x="873" y="226" text-anchor="middle" fill="#6b7280" font-size="10" font-family="sans-serif">/ /about /gallery /contact</text>
+
+        <rect x="798" y="250" width="150" height="40" rx="8" fill="#1a1a1a" stroke="rgba(59,130,246,0.3)" stroke-width="1"/>
+        <text x="873" y="267" text-anchor="middle" fill="#60a5fa" font-size="11" font-family="sans-serif" font-weight="600">Dynamic Pages</text>
+        <text x="873" y="281" text-anchor="middle" fill="#6b7280" font-size="10" font-family="sans-serif">/dashboard /admin</text>
+
+        <rect x="798" y="305" width="150" height="40" rx="8" fill="#1a1a1a" stroke="rgba(59,130,246,0.3)" stroke-width="1"/>
+        <text x="873" y="322" text-anchor="middle" fill="#60a5fa" font-size="11" font-family="sans-serif" font-weight="600">proxy.ts</text>
+        <text x="873" y="336" text-anchor="middle" fill="#6b7280" font-size="10" font-family="sans-serif">Route protection middleware</text>
+
+        <rect x="798" y="360" width="150" height="40" rx="8" fill="#1a1a1a" stroke="rgba(59,130,246,0.3)" stroke-width="1"/>
+        <text x="873" y="377" text-anchor="middle" fill="#60a5fa" font-size="11" font-family="sans-serif" font-weight="600">Auto Deploy</text>
+        <text x="873" y="391" text-anchor="middle" fill="#6b7280" font-size="10" font-family="sans-serif">GitHub push → live in ~60s</text>
+
+        <rect x="798" y="415" width="150" height="40" rx="8" fill="#1a1a1a" stroke="rgba(59,130,246,0.3)" stroke-width="1"/>
+        <text x="873" y="432" text-anchor="middle" fill="#60a5fa" font-size="11" font-family="sans-serif" font-weight="600">SSL / HTTPS</text>
+        <text x="873" y="446" text-anchor="middle" fill="#6b7280" font-size="10" font-family="sans-serif">Auto-issued certificate</text>
+
+        <!-- Arrow from Supabase to Vercel -->
+        <line x1="724" y1="290" x2="798" y2="270" stroke="rgba(59,130,246,0.4)" stroke-width="1.5" marker-end="url(#arrow)" stroke-dasharray="4,3"/>
+
+        <!-- Bottom legend -->
+        <rect x="30" y="560" width="940" height="40" rx="8" fill="rgba(255,255,255,0.02)" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
+        <circle cx="60" cy="580" r="5" fill="#f97316"/>
+        <text x="72" y="584" fill="#9ca3af" font-size="11" font-family="sans-serif">Player flow</text>
+        <circle cx="170" cy="580" r="5" fill="#a855f7"/>
+        <text x="182" y="584" fill="#9ca3af" font-size="11" font-family="sans-serif">Admin flow</text>
+        <circle cx="270" cy="580" r="5" fill="#4ade80"/>
+        <text x="282" y="584" fill="#9ca3af" font-size="11" font-family="sans-serif">Supabase auth/data</text>
+        <circle cx="410" cy="580" r="5" fill="#f87171"/>
+        <text x="422" y="584" fill="#9ca3af" font-size="11" font-family="sans-serif">Route protection</text>
+        <circle cx="540" cy="580" r="5" fill="#60a5fa"/>
+        <text x="552" y="584" fill="#9ca3af" font-size="11" font-family="sans-serif">Hosting / CDN</text>
+        <circle cx="650" cy="580" r="5" fill="#c084fc"/>
+        <text x="662" y="584" fill="#9ca3af" font-size="11" font-family="sans-serif">Bot protection</text>
+      </svg>
+    </div>
+  </section>
+
+  <!-- 4. AUTH FLOW -->
+  <section id="auth-flow">
+    <div class="section-header">
+      <div class="section-tag">Section 4</div>
+      <h2>Authentication <span class="orange">Flow</span></h2>
+    </div>
+    <div class="card-grid col2">
+      <div class="card">
+        <h4>Registration Flow</h4>
+        <ul class="checklist">
+          <li>User fills Step 1: name, email, password, confirm password</li>
+          <li>Client validates passwords match and length ≥ 6</li>
+          <li>User fills Step 2: position, age group, experience, parent info</li>
+          <li>User completes hCaptcha challenge</li>
+          <li>Client calls <code>supabase.auth.signUp()</code> with captchaToken</li>
+          <li>Supabase verifies hCaptcha token server-side</li>
+          <li>Supabase creates row in <code>auth.users</code></li>
+          <li>Client inserts row into <code>profiles</code> table (RLS enforced)</li>
+          <li>User redirected to <code>/dashboard</code></li>
+        </ul>
+      </div>
+      <div class="card">
+        <h4>Login Flow</h4>
+        <ul class="checklist">
+          <li>User enters email and password</li>
+          <li>User completes hCaptcha challenge</li>
+          <li>Client calls <code>supabase.auth.signInWithPassword()</code> with captchaToken</li>
+          <li>Supabase verifies hCaptcha token server-side</li>
+          <li>Supabase validates credentials, issues JWT session cookie</li>
+          <li><code>proxy.ts</code> reads the JWT on every request</li>
+          <li>If valid → allows access to <code>/dashboard</code> or <code>/admin</code></li>
+          <li>If invalid/expired → redirects to <code>/login</code></li>
+          <li>Admin role verified server-side before rendering <code>/admin</code></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. SECURITY AUDIT -->
+  <section id="security">
+    <div class="section-header">
+      <div class="section-tag">Section 5</div>
+      <h2>Security <span class="orange">Audit</span></h2>
+      <p>The following findings were identified through a review of the authentication and registration code, database schema, and route protection logic.</p>
+    </div>
+
+    <!-- HIGH -->
+    <h4 style="margin-bottom:16px;">High Severity</h4>
+
+    <div class="finding high">
+      <div class="finding-header">
+        <h3>Weak Password Minimum (6 Characters)</h3>
+        <span class="badge high">High</span>
+      </div>
+      <div class="finding-body">
+        <p><span class="label">Location</span><code>app/register/page.tsx:51</code></p>
+        <p>The only password requirement is a minimum of 6 characters with no complexity rules enforced. This permits passwords like <code>123456</code> or <code>abcdef</code>, which are trivially crackable. For a site storing minors' personal data and emergency contact information, this is a significant risk.</p>
+        <p><span class="label">Risk</span>Account takeover via brute force or credential stuffing attacks.</p>
+      </div>
+    </div>
+
+    <div class="finding high">
+      <div class="finding-header">
+        <h3>Orphaned Auth User on Profile Insert Failure</h3>
+        <span class="badge high">High</span>
+      </div>
+      <div class="finding-body">
+        <p><span class="label">Location</span><code>app/register/page.tsx:88–109</code></p>
+        <p>If <code>supabase.auth.signUp()</code> succeeds but the subsequent <code>profiles</code> table insert fails, a user exists in <code>auth.users</code> with no profile row. This user can log in but the dashboard will show no data and errors will occur. There is no cleanup or retry mechanism.</p>
+        <p><span class="label">Risk</span>Broken user state; user cannot access dashboard; admin cannot see the player.</p>
+      </div>
+    </div>
+
+    <!-- MEDIUM -->
+    <h4 style="margin: 28px 0 16px;">Medium Severity</h4>
+
+    <div class="finding medium">
+      <div class="finding-header">
+        <h3>Email Duplicated in Profiles Table</h3>
+        <span class="badge medium">Medium</span>
+      </div>
+      <div class="finding-body">
+        <p><span class="label">Location</span><code>supabase-schema.sql:15</code> and <code>app/register/page.tsx:92</code></p>
+        <p>The <code>profiles</code> table stores <code>email</code> as a separate column copied from the form at registration time. If a user later changes their email via Supabase Auth, the <code>profiles.email</code> becomes stale and out of sync with <code>auth.users.email</code>, leading to incorrect data displayed in the admin dashboard.</p>
+        <p><span class="label">Risk</span>Data inconsistency; admin sees wrong email for a player.</p>
+      </div>
+    </div>
+
+    <div class="finding medium">
+      <div class="finding-header">
+        <h3>No Password Strength Feedback</h3>
+        <span class="badge medium">Medium</span>
+      </div>
+      <div class="finding-body">
+        <p><span class="label">Location</span><code>app/register/page.tsx</code> — Step 1 form</p>
+        <p>Users receive no visual feedback about password strength while typing. There is no indicator showing whether a password is weak, moderate, or strong, and no guidance on what makes a good password. Users will naturally choose the shortest password accepted (6 chars).</p>
+        <p><span class="label">Risk</span>Poor password hygiene across the user base increases account compromise risk.</p>
+      </div>
+    </div>
+
+    <div class="finding medium">
+      <div class="finding-header">
+        <h3>No "Forgot Password" Recovery Flow</h3>
+        <span class="badge medium">Medium</span>
+      </div>
+      <div class="finding-body">
+        <p><span class="label">Location</span><code>app/login/page.tsx</code> — missing link</p>
+        <p>There is no "Forgot Password?" link on the login page. Users who forget their password have no self-service recovery path and must contact an admin. Supabase provides a <code>resetPasswordForEmail()</code> method ready to use.</p>
+        <p><span class="label">Risk</span>Poor user experience; players locked out permanently; admin burden.</p>
+      </div>
+    </div>
+
+    <div class="finding medium">
+      <div class="finding-header">
+        <h3>No Phone Number Validation</h3>
+        <span class="badge medium">Medium</span>
+      </div>
+      <div class="finding-body">
+        <p><span class="label">Location</span><code>app/register/page.tsx:236</code> — phone, parentPhone fields</p>
+        <p>Phone fields use <code>type="tel"</code> with a placeholder but no pattern or validation. Any string is accepted — letters, symbols, or empty strings — making emergency contact data unreliable.</p>
+        <p><span class="label">Risk</span>Unusable emergency contact data; inability to reach parents in emergencies.</p>
+      </div>
+    </div>
+
+    <!-- LOW -->
+    <h4 style="margin: 28px 0 16px;">Low Severity</h4>
+
+    <div class="finding low">
+      <div class="finding-header">
+        <h3>No Terms of Service / Privacy Policy Acceptance</h3>
+        <span class="badge low">Low</span>
+      </div>
+      <div class="finding-body">
+        <p><span class="label">Location</span><code>app/register/page.tsx</code> — Step 2</p>
+        <p>Registration collects personal data including minors' dates of birth, parent names, and emergency contacts, but there is no checkbox requiring users to accept a Privacy Policy or Terms of Service. This may create legal exposure under COPPA (for users under 13) and general data protection obligations.</p>
+        <p><span class="label">Risk</span>Legal/compliance exposure for collecting children's data without consent.</p>
+      </div>
+    </div>
+
+    <div class="finding low">
+      <div class="finding-header">
+        <h3>No Age Verification for Minors</h3>
+        <span class="badge low">Low</span>
+      </div>
+      <div class="finding-body">
+        <p><span class="label">Location</span><code>app/register/page.tsx:219</code></p>
+        <p>Date of birth is collected but not validated on the client. A user could enter a date making them under 13 with no additional parental consent flow triggered, which may conflict with COPPA requirements.</p>
+        <p><span class="label">Risk</span>COPPA compliance gap; collecting children's data without verified parental consent.</p>
+      </div>
+    </div>
+
+    <div class="finding info">
+      <div class="finding-header">
+        <h3>No Password Visibility Toggle</h3>
+        <span class="badge info">Info</span>
+      </div>
+      <div class="finding-body">
+        <p><span class="label">Location</span><code>app/login/page.tsx</code> and <code>app/register/page.tsx</code></p>
+        <p>Password fields have no show/hide toggle. Users on mobile or those making typos have no way to verify their password before submitting, leading to failed logins and re-registration attempts.</p>
+        <p><span class="label">Risk</span>Minor UX friction; no direct security impact.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. RECOMMENDATIONS -->
+  <section id="recommendations">
+    <div class="section-header">
+      <div class="section-tag">Section 6</div>
+      <h2>Security <span class="orange">Recommendations</span></h2>
+    </div>
+    <div class="card-grid col2">
+      <div class="card">
+        <h3>1. Enforce Strong Passwords</h3>
+        <p>Increase minimum to 8 characters and require at least one uppercase, one number, and one special character. Add a real-time strength meter.</p>
+        <div class="rec">
+          <p>In <code>register/page.tsx</code> replace the length check with:<br><code>/^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$]).{8,}$/.test(password)</code></p>
+        </div>
+      </div>
+      <div class="card">
+        <h3>2. Fix Orphaned Auth Users</h3>
+        <p>Wrap auth signup and profile insert in a try/catch. If the profile insert fails, call <code>supabase.auth.admin.deleteUser()</code> to clean up, or use a Supabase Database Function triggered by the <code>auth.users</code> insert.</p>
+        <div class="rec">
+          <p>Better: use a Supabase trigger on <code>auth.users</code> to auto-create the profile row server-side, removing the client-side race condition entirely.</p>
+        </div>
+      </div>
+      <div class="card">
+        <h3>3. Remove Email from Profiles</h3>
+        <p>Drop the <code>email</code> column from <code>profiles</code>. Always read email from <code>auth.users</code> via <code>user.email</code> from the session, which stays authoritative after any email change.</p>
+        <div class="rec">
+          <p><code>ALTER TABLE profiles DROP COLUMN email;</code></p>
+        </div>
+      </div>
+      <div class="card">
+        <h3>4. Add Forgot Password</h3>
+        <p>Add a "Forgot password?" link on the login page pointing to a <code>/forgot-password</code> page that calls <code>supabase.auth.resetPasswordForEmail(email)</code>. Supabase sends a secure reset link automatically.</p>
+        <div class="rec">
+          <p>Also create <code>/reset-password</code> to handle the callback and let users set a new password via <code>supabase.auth.updateUser()</code>.</p>
+        </div>
+      </div>
+      <div class="card">
+        <h3>5. Validate Phone Numbers</h3>
+        <p>Add a <code>pattern</code> attribute and client-side validation using a regex that accepts standard US phone formats.</p>
+        <div class="rec">
+          <p><code>pattern="[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4}"</code></p>
+        </div>
+      </div>
+      <div class="card">
+        <h3>6. Add Terms &amp; Privacy Checkbox</h3>
+        <p>Add a required checkbox on Step 2 of registration: "I agree to the Terms of Service and Privacy Policy." Gate the submit button on this being checked. Create minimal <code>/terms</code> and <code>/privacy</code> pages.</p>
+        <div class="rec">
+          <p>For players under 13 (detected from date of birth), require a parent email and send a parental consent email before activating the account.</p>
+        </div>
+      </div>
+      <div class="card">
+        <h3>7. Add Password Visibility Toggle</h3>
+        <p>Add an eye icon button to all password inputs that toggles the input type between <code>password</code> and <code>text</code>.</p>
+        <div class="rec">
+          <p>Use <code>useState</code> for each field: <code>const [show, setShow] = useState(false)</code> → <code>type={show ? 'text' : 'password'}</code></p>
+        </div>
+      </div>
+      <div class="card">
+        <h3>8. Enable Supabase Auth Rate Limiting</h3>
+        <p>In Supabase → Auth Settings, configure the rate limits for sign-in and sign-up attempts per hour per IP. The defaults are permissive — tighten them for a site with youth players.</p>
+        <div class="rec">
+          <p>Recommended: max 5 sign-in attempts per hour per IP. This works alongside hCaptcha as a second line of defence.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7. SEO -->
+  <section id="seo">
+    <div class="section-header">
+      <div class="section-tag">Section 7</div>
+      <h2>SEO <span class="orange">Recommendations</span></h2>
+      <p>The following improvements will help search engines discover, index, and rank the site, and improve how it appears in search results and when shared on social media.</p>
+    </div>
+
+    <table style="margin-bottom:40px;">
+      <thead>
+        <tr><th>Issue</th><th>Priority</th><th>Fix</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="status-dot dot-red"></span>No per-page metadata (title/description)</td>
+          <td><span class="badge high">High</span></td>
+          <td>Export a unique <code>metadata</code> object from each <code>page.tsx</code></td>
+        </tr>
+        <tr>
+          <td><span class="status-dot dot-red"></span>No Open Graph / Twitter Card tags</td>
+          <td><span class="badge high">High</span></td>
+          <td>Add <code>openGraph</code> and <code>twitter</code> to each page's metadata</td>
+        </tr>
+        <tr>
+          <td><span class="status-dot dot-red"></span>No sitemap.xml</td>
+          <td><span class="badge high">High</span></td>
+          <td>Create <code>app/sitemap.ts</code> — Next.js generates it automatically</td>
+        </tr>
+        <tr>
+          <td><span class="status-dot dot-red"></span>No robots.txt</td>
+          <td><span class="badge high">High</span></td>
+          <td>Create <code>app/robots.ts</code> — block /dashboard and /admin from indexing</td>
+        </tr>
+        <tr>
+          <td><span class="status-dot dot-yellow"></span>No structured data (JSON-LD)</td>
+          <td><span class="badge medium">Medium</span></td>
+          <td>Add <code>SportsOrganization</code> JSON-LD schema to homepage</td>
+        </tr>
+        <tr>
+          <td><span class="status-dot dot-yellow"></span>No canonical URLs</td>
+          <td><span class="badge medium">Medium</span></td>
+          <td>Add <code>alternates: { canonical: '...' }</code> to each page's metadata</td>
+        </tr>
+        <tr>
+          <td><span class="status-dot dot-yellow"></span>Images lack descriptive alt text</td>
+          <td><span class="badge medium">Medium</span></td>
+          <td>Update all <code>&lt;Image&gt;</code> components with descriptive alt strings</td>
+        </tr>
+        <tr>
+          <td><span class="status-dot dot-yellow"></span>No Google Analytics / Search Console</td>
+          <td><span class="badge medium">Medium</span></td>
+          <td>Add GA4 tag; verify site ownership in Google Search Console</td>
+        </tr>
+        <tr>
+          <td><span class="status-dot dot-yellow"></span>No apple-touch-icon / favicon variants</td>
+          <td><span class="badge medium">Medium</span></td>
+          <td>Add <code>icon.png</code> and <code>apple-icon.png</code> to the <code>app/</code> directory</td>
+        </tr>
+        <tr>
+          <td><span class="status-dot dot-green"></span>Clean URL structure</td>
+          <td><span class="badge low">Good</span></td>
+          <td>Routes like /about, /gallery, /register are already SEO-friendly</td>
+        </tr>
+        <tr>
+          <td><span class="status-dot dot-green"></span>HTTPS enforced</td>
+          <td><span class="badge low">Good</span></td>
+          <td>Vercel auto-issues SSL — HTTPS is active</td>
+        </tr>
+        <tr>
+          <td><span class="status-dot dot-green"></span>Fast page loads (static pages)</td>
+          <td><span class="badge low">Good</span></td>
+          <td>Public pages are statically prerendered — excellent Core Web Vitals</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3 style="margin-bottom: 20px;">Quick SEO Fixes — Code Examples</h3>
+    <div class="card-grid col2">
+      <div class="card">
+        <h4>Per-Page Metadata</h4>
+        <p>Add to each <code>page.tsx</code> — e.g. <code>app/about/page.tsx</code>:</p>
+        <div class="rec">
+          <p><code>export const metadata = &#123;<br>&nbsp;&nbsp;title: 'About Us | DMV All Stars FC',<br>&nbsp;&nbsp;description: 'Learn about DMV All Stars FC, est. 2015 — developing elite soccer talent in the Washington DC metro area.',<br>&nbsp;&nbsp;openGraph: &#123;<br>&nbsp;&nbsp;&nbsp;&nbsp;title: 'About DMV All Stars FC',<br>&nbsp;&nbsp;&nbsp;&nbsp;images: ['/soccer.png'],<br>&nbsp;&nbsp;&#125;,<br>&#125;</code></p>
+        </div>
+      </div>
+      <div class="card">
+        <h4>Sitemap + Robots</h4>
+        <p>Create <code>app/sitemap.ts</code>:</p>
+        <div class="rec">
+          <p><code>export default function sitemap() &#123;<br>&nbsp;&nbsp;return [<br>&nbsp;&nbsp;&nbsp;&nbsp;&#123; url: 'https://dmv-allstars.com', changeFrequency: 'weekly', priority: 1 &#125;,<br>&nbsp;&nbsp;&nbsp;&nbsp;&#123; url: 'https://dmv-allstars.com/about', priority: 0.8 &#125;,<br>&nbsp;&nbsp;&nbsp;&nbsp;&#123; url: 'https://dmv-allstars.com/gallery', priority: 0.7 &#125;,<br>&nbsp;&nbsp;]<br>&#125;</code></p>
+        </div>
+      </div>
+      <div class="card">
+        <h4>JSON-LD Structured Data</h4>
+        <p>Add to <code>app/page.tsx</code> for rich search results:</p>
+        <div class="rec">
+          <p><code>&lt;script type="application/ld+json"&gt;<br>&#123; "@context": "https://schema.org",<br>"@type": "SportsOrganization",<br>"name": "DMV All Stars FC",<br>"sport": "Soccer",<br>"url": "https://dmv-allstars.com",<br>"foundingDate": "2015",<br>"address": &#123; "@type": "PostalAddress", "addressLocality": "Washington", "addressRegion": "DC" &#125; &#125;<br>&lt;/script&gt;</code></p>
+        </div>
+      </div>
+      <div class="card">
+        <h4>Robots.txt</h4>
+        <p>Create <code>app/robots.ts</code> to block private routes:</p>
+        <div class="rec">
+          <p><code>export default function robots() &#123;<br>&nbsp;&nbsp;return &#123;<br>&nbsp;&nbsp;&nbsp;&nbsp;rules: &#123; userAgent: '*', allow: '/', disallow: ['/dashboard', '/admin'] &#125;,<br>&nbsp;&nbsp;&nbsp;&nbsp;sitemap: 'https://dmv-allstars.com/sitemap.xml',<br>&nbsp;&nbsp;&#125;<br>&#125;</code></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 8. STACK -->
+  <section id="stack">
+    <div class="section-header">
+      <div class="section-tag">Section 8</div>
+      <h2>Technology <span class="orange">Stack</span></h2>
+    </div>
+    <div class="card-grid col2">
+      <div class="card">
+        <div class="stack-item">
+          <div class="stack-icon">⚡</div>
+          <div><div class="stack-name">Next.js 16.2</div><div class="stack-desc">App Router, Server + Client Components, Turbopack build</div></div>
+        </div>
+        <div class="stack-item">
+          <div class="stack-icon">🎨</div>
+          <div><div class="stack-name">Tailwind CSS v4</div><div class="stack-desc">Utility-first CSS, configured via <code>@theme</code> in globals.css</div></div>
+        </div>
+        <div class="stack-item">
+          <div class="stack-icon">🔷</div>
+          <div><div class="stack-name">TypeScript</div><div class="stack-desc">Full type safety across all components and API calls</div></div>
+        </div>
+        <div class="stack-item">
+          <div class="stack-icon">🔤</div>
+          <div><div class="stack-name">Geist Font</div><div class="stack-desc">Google Fonts via next/font — zero layout shift</div></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="stack-item">
+          <div class="stack-icon">🗄️</div>
+          <div><div class="stack-name">Supabase</div><div class="stack-desc">PostgreSQL database, Auth (JWT), RLS, hCaptcha integration</div></div>
+        </div>
+        <div class="stack-item">
+          <div class="stack-icon">🌐</div>
+          <div><div class="stack-name">Vercel</div><div class="stack-desc">Serverless hosting, edge CDN, auto SSL, CI/CD from GitHub</div></div>
+        </div>
+        <div class="stack-item">
+          <div class="stack-icon">🤖</div>
+          <div><div class="stack-name">hCaptcha</div><div class="stack-desc">Bot protection on login + register; verified server-side</div></div>
+        </div>
+        <div class="stack-item">
+          <div class="stack-icon">🐙</div>
+          <div><div class="stack-name">GitHub</div><div class="stack-desc">Source control at <code>ptkoroma/dmv-allstars</code></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div><!-- /container -->
+
+<footer>
+  <p>DMV All Stars FC — Site Documentation &nbsp;·&nbsp; Generated <strong>March 2026</strong> &nbsp;·&nbsp; <strong>dmv-allstars.com</strong></p>
+</footer>
+
+</body>
+</html>
