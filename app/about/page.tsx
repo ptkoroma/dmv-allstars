@@ -1,3 +1,12 @@
+import type { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: 'About Us',
+  description: 'Learn about DMV All Stars FC — our history, mission, values, and coaching staff. Building champions since 2015 in the Washington DC metro area.',
+  alternates: { canonical: 'https://dmv-allstars.com/about' },
+  openGraph: { title: 'About DMV All Stars FC', description: 'Our history, mission, and coaching staff.', url: 'https://dmv-allstars.com/about' },
+}
+
 const coaches = [
   { name: 'Marcus Williams', role: 'Head Coach', exp: '15 years coaching experience' },
   { name: 'Sofia Reyes', role: 'Assistant Coach', exp: 'Former professional player' },

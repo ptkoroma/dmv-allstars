@@ -6,9 +6,18 @@ import { useRouter } from 'next/navigation'
 import HCaptcha from '@hcaptcha/react-hcaptcha'
 import { createClient } from '@/lib/supabase/client'
 
+function EyeIcon({ show }: { show: boolean }) {
+  return show ? (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+  ) : (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+  )
+}
+
 export default function LoginPage() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [showPassword, setShowPassword] = useState(false)
   const [captchaToken, setCaptchaToken] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
@@ -20,10 +29,7 @@ export default function LoginPage() {
     e.preventDefault()
     setError('')
 
-    if (!captchaToken) {
-      setError('Please complete the CAPTCHA.')
-      return
-    }
+    if (!captchaToken) { setError('Please complete the CAPTCHA.'); return }
 
     setLoading(true)
 
@@ -66,60 +72,40 @@ export default function LoginPage() {
           <p className="text-gray-400 text-sm mb-8">Sign in to access your player dashboard.</p>
 
           {error && (
-            <div className="mb-5 p-3 bg-red-500/10 border border-red-500/30 rounded-lg text-red-400 text-sm">
-              {error}
-            </div>
+            <div className="mb-5 p-3 bg-red-500/10 border border-red-500/30 rounded-lg text-red-400 text-sm">{error}</div>
           )}
 
           <form onSubmit={handleLogin} className="space-y-5">
             <div>
               <label className="block text-gray-400 text-sm mb-1.5">Email Address</label>
-              <input
-                type="email"
-                value={email}
-                onChange={e => setEmail(e.target.value)}
-                placeholder="your@email.com"
-                required
-                className="w-full bg-[#0f0f0f] border border-white/10 focus:border-orange-500 rounded-lg px-4 py-3 text-white placeholder-gray-600 outline-none transition-colors text-sm"
-              />
+              <input type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="your@email.com" required className="w-full bg-[#0f0f0f] border border-white/10 focus:border-orange-500 rounded-lg px-4 py-3 text-white placeholder-gray-600 outline-none transition-colors text-sm" />
             </div>
+
             <div>
-              <label className="block text-gray-400 text-sm mb-1.5">Password</label>
-              <input
-                type="password"
-                value={password}
-                onChange={e => setPassword(e.target.value)}
-                placeholder="••••••••"
-                required
-                className="w-full bg-[#0f0f0f] border border-white/10 focus:border-orange-500 rounded-lg px-4 py-3 text-white placeholder-gray-600 outline-none transition-colors text-sm"
-              />
+              <div className="flex items-center justify-between mb-1.5">
+                <label className="text-gray-400 text-sm">Password</label>
+                <Link href="/forgot-password" className="text-xs text-orange-500 hover:text-orange-400 transition-colors">Forgot password?</Link>
+              </div>
+              <div className="relative">
+                <input type={showPassword ? 'text' : 'password'} value={password} onChange={e => setPassword(e.target.value)} placeholder="••••••••" required className="w-full bg-[#0f0f0f] border border-white/10 focus:border-orange-500 rounded-lg px-4 py-3 pr-11 text-white placeholder-gray-600 outline-none transition-colors text-sm" />
+                <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-300">
+                  <EyeIcon show={showPassword} />
+                </button>
+              </div>
             </div>
 
-            {/* hCaptcha */}
             <div className="flex justify-center">
-              <HCaptcha
-                ref={captchaRef}
-                sitekey={process.env.NEXT_PUBLIC_HCAPTCHA_SITE_KEY!}
-                onVerify={token => setCaptchaToken(token)}
-                onExpire={() => setCaptchaToken('')}
-                theme="dark"
-              />
+              <HCaptcha ref={captchaRef} sitekey={process.env.NEXT_PUBLIC_HCAPTCHA_SITE_KEY!} onVerify={token => setCaptchaToken(token)} onExpire={() => setCaptchaToken('')} theme="dark" />
             </div>
 
-            <button
-              type="submit"
-              disabled={loading || !captchaToken}
-              className="w-full py-3 bg-orange-500 hover:bg-orange-600 disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold uppercase tracking-wider rounded-lg transition-colors"
-            >
+            <button type="submit" disabled={loading || !captchaToken} className="w-full py-3 bg-orange-500 hover:bg-orange-600 disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold uppercase tracking-wider rounded-lg transition-colors">
               {loading ? 'Signing in...' : 'Sign In'}
             </button>
           </form>
 
           <p className="text-center text-gray-500 text-sm mt-6">
             Not registered yet?{' '}
-            <Link href="/register" className="text-orange-500 hover:text-orange-400 font-semibold">
-              Register here
-            </Link>
+            <Link href="/register" className="text-orange-500 hover:text-orange-400 font-semibold">Register here</Link>
           </p>
         </div>
       </div>

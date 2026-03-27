@@ -1,5 +1,13 @@
+import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
+
+export const metadata: Metadata = {
+  title: 'DMV All Stars FC — Elite Soccer Club | Washington DC',
+  description: 'Developing champions on and off the field. Join the DMV area\'s premier soccer club. Founded in 2015, offering elite training, competitive play, and youth development.',
+  alternates: { canonical: 'https://dmv-allstars.com' },
+  openGraph: { title: 'DMV All Stars FC', description: 'Elite soccer club in the Washington DC metro area. Est. 2015.', url: 'https://dmv-allstars.com' },
+}
 
 const stats = [
   { value: '200+', label: 'Players' },
@@ -26,9 +34,22 @@ const features = [
   },
 ]
 
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'SportsOrganization',
+  name: 'DMV All Stars FC',
+  sport: 'Soccer',
+  url: 'https://dmv-allstars.com',
+  foundingDate: '2015',
+  description: 'Elite youth and adult soccer club in the Washington DC metro area.',
+  address: { '@type': 'PostalAddress', addressLocality: 'Washington', addressRegion: 'DC', addressCountry: 'US' },
+  contactPoint: { '@type': 'ContactPoint', email: 'info@dmv-allstars.com', contactType: 'customer support' },
+}
+
 export default function HomePage() {
   return (
     <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       {/* Hero Section */}
       <section className="relative min-h-screen flex items-center overflow-hidden bg-[#0a0a0a]">
         {/* Geometric orange triangles background */}

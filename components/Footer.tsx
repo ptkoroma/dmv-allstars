@@ -53,7 +53,13 @@ export default function Footer() {
         </div>
 
         <div className="mt-10 pt-6 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="text-gray-500 text-sm">© {new Date().getFullYear()} DMV All Stars FC. All rights reserved.</p>
+          <div className="flex flex-col sm:flex-row items-center gap-4">
+            <p className="text-gray-500 text-sm">© {new Date().getFullYear()} DMV All Stars FC. All rights reserved.</p>
+            <div className="flex gap-4">
+              <a href="/terms" className="text-gray-600 hover:text-orange-500 text-xs transition-colors">Terms</a>
+              <a href="/privacy" className="text-gray-600 hover:text-orange-500 text-xs transition-colors">Privacy</a>
+            </div>
+          </div>
           <div className="flex gap-4">
             {['Instagram', 'Twitter', 'Facebook'].map((s) => (
               <a key={s} href="#" className="text-gray-500 hover:text-orange-500 text-sm transition-colors">{s}</a>
