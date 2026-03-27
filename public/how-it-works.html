@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>DMV All Stars FC — How the Site Works</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --orange: #f97316; --orange-light: #fb923c; --orange-dark: #ea6c0a;
+      --bg: #0a0a0a; --bg2: #111111; --bg3: #1a1a1a; --bg4: #222222;
+      --border: rgba(255,255,255,0.07); --text: #ffffff; --muted: #9ca3af;
+      --green: #22c55e; --blue: #3b82f6; --purple: #a855f7; --red: #ef4444;
+    }
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; line-height: 1.6; }
+
+    /* ── PRINT ── */
+    @media print {
+      body { background: #fff; color: #111; }
+      header, .no-print { display: none; }
+      section { break-inside: avoid; padding: 24px 0; }
+      .card { border: 1px solid #ddd; background: #fafafa; }
+    }
+
+    /* ── HEADER ── */
+    header { background: var(--bg2); border-bottom: 1px solid var(--border); padding: 20px 0; position: sticky; top: 0; z-index: 100; backdrop-filter: blur(12px); }
+    .hdr { max-width: 1100px; margin: 0 auto; padding: 0 24px; display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+    .logo { display: flex; align-items: center; gap: 12px; }
+    .logo-badge { width: 40px; height: 40px; border-radius: 50%; border: 2px solid var(--orange); background: rgba(249,115,22,.1); display: flex; align-items: center; justify-content: center; font-weight: 900; color: var(--orange); font-size: 10px; }
+    .logo-name { font-weight: 900; font-size: 14px; line-height: 1.2; }
+    .logo-sub { color: var(--orange); font-size: 10px; letter-spacing: .15em; font-weight: 700; }
+    .hdr-actions { display: flex; gap: 10px; }
+    .btn { padding: 8px 18px; border-radius: 8px; font-size: 13px; font-weight: 700; cursor: pointer; border: none; text-decoration: none; display: inline-block; }
+    .btn-ghost { background: rgba(255,255,255,.07); color: var(--muted); }
+    .btn-orange { background: var(--orange); color: #fff; }
+    .btn-ghost:hover { background: rgba(255,255,255,.12); }
+    .btn-orange:hover { background: var(--orange-dark); }
+
+    /* ── LAYOUT ── */
+    .wrap { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+    section { padding: 80px 0; }
+    section + section { border-top: 1px solid var(--border); }
+
+    /* ── HERO ── */
+    .hero { padding: 80px 0 60px; text-align: center; }
+    .hero-tag { display: inline-flex; align-items: center; gap: 8px; background: rgba(249,115,22,.12); border: 1px solid rgba(249,115,22,.3); border-radius: 999px; padding: 6px 16px; font-size: 12px; font-weight: 700; color: var(--orange); letter-spacing: .08em; text-transform: uppercase; margin-bottom: 24px; }
+    .hero-tag span { width: 6px; height: 6px; background: var(--orange); border-radius: 50%; display: inline-block; animation: pulse 2s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.5;transform:scale(.8)} }
+    .hero h1 { font-size: clamp(32px, 6vw, 58px); font-weight: 900; line-height: 1.05; margin-bottom: 20px; }
+    .hero h1 em { color: var(--orange); font-style: normal; }
+    .hero p { color: var(--muted); font-size: 18px; max-width: 560px; margin: 0 auto 40px; }
+    .hero-pills { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+    .pill { background: var(--bg3); border: 1px solid var(--border); border-radius: 999px; padding: 6px 16px; font-size: 13px; color: var(--muted); display: flex; align-items: center; gap: 6px; }
+    .pill strong { color: var(--text); }
+
+    /* ── SECTION LABELS ── */
+    .sec-label { display: inline-block; background: rgba(249,115,22,.1); color: var(--orange); font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: .14em; padding: 4px 12px; border-radius: 999px; margin-bottom: 12px; }
+    h2 { font-size: clamp(24px, 4vw, 36px); font-weight: 900; margin-bottom: 10px; }
+    h2 em { color: var(--orange); font-style: normal; }
+    .sec-desc { color: var(--muted); font-size: 16px; max-width: 620px; margin-bottom: 48px; }
+
+    /* ── CARDS ── */
+    .grid { display: grid; gap: 20px; }
+    .g2 { grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); }
+    .g3 { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); }
+    .g4 { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); }
+    .card { background: var(--bg3); border: 1px solid var(--border); border-radius: 16px; padding: 28px; }
+    .card:hover { border-color: rgba(249,115,22,.25); }
+    .card-icon { font-size: 32px; margin-bottom: 14px; }
+    .card h3 { font-size: 17px; font-weight: 800; margin-bottom: 8px; }
+    .card p { color: var(--muted); font-size: 14px; line-height: 1.6; }
+
+    /* ── STEPS ── */
+    .steps { display: flex; flex-direction: column; gap: 0; }
+    .step { display: flex; gap: 20px; position: relative; padding-bottom: 32px; }
+    .step:last-child { padding-bottom: 0; }
+    .step-left { display: flex; flex-direction: column; align-items: center; }
+    .step-num { width: 44px; height: 44px; border-radius: 50%; background: var(--orange); color: #fff; font-weight: 900; font-size: 16px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .step-line { width: 2px; background: rgba(249,115,22,.2); flex: 1; margin-top: 8px; }
+    .step:last-child .step-line { display: none; }
+    .step-body { padding-top: 8px; flex: 1; }
+    .step-body h3 { font-size: 17px; font-weight: 800; margin-bottom: 6px; }
+    .step-body p { color: var(--muted); font-size: 14px; line-height: 1.6; }
+    .step-body code { background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.1); border-radius: 5px; padding: 2px 7px; font-size: 12px; color: #e2e8f0; font-family: monospace; }
+
+    /* ── USER TYPE CARDS ── */
+    .user-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 20px; }
+    .user-card { border-radius: 20px; padding: 32px 24px; text-align: center; border: 1px solid; }
+    .user-card.visitor { background: rgba(255,255,255,.03); border-color: rgba(255,255,255,.1); }
+    .user-card.player { background: rgba(249,115,22,.06); border-color: rgba(249,115,22,.3); }
+    .user-card.admin { background: rgba(168,85,247,.06); border-color: rgba(168,85,247,.3); }
+    .user-card-icon { font-size: 48px; margin-bottom: 16px; }
+    .user-card h3 { font-size: 18px; font-weight: 900; margin-bottom: 6px; }
+    .user-card .user-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .12em; margin-bottom: 16px; }
+    .visitor .user-label { color: var(--muted); }
+    .player .user-label { color: var(--orange); }
+    .admin .user-label { color: #c084fc; }
+    .user-card ul { list-style: none; display: flex; flex-direction: column; gap: 8px; text-align: left; }
+    .user-card li { display: flex; align-items: flex-start; gap: 8px; font-size: 13px; color: var(--muted); }
+    .user-card li::before { content: '→'; font-weight: 700; flex-shrink: 0; margin-top: 1px; }
+    .visitor li::before { color: var(--muted); }
+    .player li::before { color: var(--orange); }
+    .admin li::before { color: #c084fc; }
+
+    /* ── TECH STACK ── */
+    .tech-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; }
+    .tech-card { background: var(--bg3); border: 1px solid var(--border); border-radius: 14px; padding: 20px; display: flex; gap: 14px; align-items: flex-start; }
+    .tech-icon { width: 42px; height: 42px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
+    .tech-name { font-weight: 800; font-size: 15px; margin-bottom: 3px; }
+    .tech-desc { font-size: 12px; color: var(--muted); line-height: 1.5; }
+
+    /* ── DIAGRAM WRAP ── */
+    .diagram-wrap { background: var(--bg3); border: 1px solid var(--border); border-radius: 20px; padding: 32px; overflow-x: auto; }
+
+    /* ── FLOW CARDS ── */
+    .flow-row { display: flex; align-items: center; gap: 0; flex-wrap: nowrap; overflow-x: auto; padding-bottom: 8px; }
+    .flow-box { background: var(--bg3); border: 1px solid var(--border); border-radius: 12px; padding: 14px 18px; min-width: 140px; text-align: center; flex-shrink: 0; }
+    .flow-box .fb-icon { font-size: 24px; margin-bottom: 6px; }
+    .flow-box .fb-title { font-size: 13px; font-weight: 700; color: var(--text); }
+    .flow-box .fb-sub { font-size: 11px; color: var(--muted); margin-top: 2px; }
+    .flow-box.active { background: rgba(249,115,22,.08); border-color: rgba(249,115,22,.35); }
+    .flow-arrow { color: var(--orange); font-size: 20px; padding: 0 10px; flex-shrink: 0; }
+
+    /* ── SECURITY / SEO TABLE ── */
+    table { width: 100%; border-collapse: collapse; font-size: 14px; }
+    th { text-align: left; padding: 10px 16px; background: rgba(255,255,255,.04); color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: .08em; border-bottom: 1px solid var(--border); }
+    td { padding: 12px 16px; border-bottom: 1px solid rgba(255,255,255,.04); color: #d1d5db; vertical-align: middle; }
+    tr:last-child td { border: none; }
+    .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 8px; }
+    .dot-green { background: var(--green); }
+    .dot-orange { background: var(--orange); }
+    .dot-red { background: var(--red); }
+    .tag { display: inline-block; padding: 3px 10px; border-radius: 999px; font-size: 11px; font-weight: 700; }
+    .tag-green { background: rgba(34,197,94,.1); color: #4ade80; }
+    .tag-orange { background: rgba(249,115,22,.1); color: var(--orange); }
+    .tag-red { background: rgba(239,68,68,.1); color: #f87171; }
+
+    /* ── FOOTER ── */
+    footer { background: var(--bg2); border-top: 1px solid var(--border); padding: 32px 0; text-align: center; color: var(--muted); font-size: 13px; }
+    footer strong { color: var(--orange); }
+
+    @media (max-width: 640px) {
+      section { padding: 56px 0; }
+      .user-cards, .tech-grid { grid-template-columns: 1fr; }
+      .hero h1 { font-size: 32px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="hdr">
+    <div class="logo">
+      <div class="logo-badge">DMV</div>
+      <div>
+        <div class="logo-name">DMV All Stars FC</div>
+        <div class="logo-sub">Est. 2015</div>
+      </div>
+    </div>
+    <div class="hdr-actions no-print">
+      <a href="https://dmv-allstars.com" class="btn btn-ghost" target="_blank">Visit Site</a>
+      <button onclick="window.print()" class="btn btn-orange">Print / Save PDF</button>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-tag"><span></span> Live at dmv-allstars.com</div>
+  <h1>How the<br><em>DMV All Stars FC</em><br>Website Works</h1>
+  <p>A complete visual guide to the site's pages, user journeys, and technology.</p>
+  <div class="hero-pills">
+    <div class="pill">Framework <strong>Next.js 16</strong></div>
+    <div class="pill">Auth &amp; Database <strong>Supabase</strong></div>
+    <div class="pill">Hosting <strong>Vercel</strong></div>
+    <div class="pill">Protection <strong>hCaptcha</strong></div>
+    <div class="pill">Domain <strong>dmv-allstars.com</strong></div>
+  </div>
+</div>
+
+<!-- SECTION 1: WHO USES THE SITE -->
+<section id="users">
+  <div class="sec-label">Section 1</div>
+  <h2>Who Uses <em>the Site</em></h2>
+  <p class="sec-desc">Three types of people interact with the site, each with different levels of access.</p>
+
+  <div class="user-cards">
+    <div class="user-card visitor">
+      <div class="user-card-icon">👤</div>
+      <h3>Visitor</h3>
+      <div class="user-label">No account required</div>
+      <ul>
+        <li>Browse the homepage</li>
+        <li>Read about the team</li>
+        <li>View the photo gallery</li>
+        <li>Submit a contact form</li>
+        <li>Register as a player</li>
+      </ul>
+    </div>
+    <div class="user-card player">
+      <div class="user-card-icon">⚽</div>
+      <h3>Player</h3>
+      <div class="user-label">Registered account</div>
+      <ul>
+        <li>Everything a visitor can do</li>
+        <li>Log in securely</li>
+        <li>View their own profile</li>
+        <li>Edit their player details</li>
+        <li>Reset their password</li>
+      </ul>
+    </div>
+    <div class="user-card admin">
+      <div class="user-card-icon">🛡️</div>
+      <h3>Admin</h3>
+      <div class="user-label">Elevated role</div>
+      <ul>
+        <li>Everything a player can do</li>
+        <li>View all registered players</li>
+        <li>Search and filter players</li>
+        <li>Update player status</li>
+        <li>Promote players to admin</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 2: PAGES -->
+<section id="pages">
+  <div class="sec-label">Section 2</div>
+  <h2>Pages <em>&amp; Routes</em></h2>
+  <p class="sec-desc">The site has 14 pages split across public, authenticated, and admin areas.</p>
+
+  <div class="grid g3">
+    <div class="card">
+      <div class="card-icon">🌐</div>
+      <h3>Public Pages</h3>
+      <p>Accessible to anyone — no login required.</p>
+      <div style="margin-top:14px;display:flex;flex-direction:column;gap:6px;">
+        {['/ — Home','about — About','gallery — Gallery','contact — Contact','register — Register','login — Login','forgot-password','terms — Terms','privacy — Privacy'].map(r=>`<span style="font-size:13px;color:#9ca3af;font-family:monospace">/${r}</span>`).join('')}
+        <span style="font-size:13px;color:#9ca3af;font-family:monospace">/ — Home</span>
+        <span style="font-size:13px;color:#9ca3af;font-family:monospace">/about</span>
+        <span style="font-size:13px;color:#9ca3af;font-family:monospace">/gallery</span>
+        <span style="font-size:13px;color:#9ca3af;font-family:monospace">/contact</span>
+        <span style="font-size:13px;color:#9ca3af;font-family:monospace">/login</span>
+        <span style="font-size:13px;color:#9ca3af;font-family:monospace">/register</span>
+        <span style="font-size:13px;color:#9ca3af;font-family:monospace">/forgot-password</span>
+        <span style="font-size:13px;color:#9ca3af;font-family:monospace">/terms &amp; /privacy</span>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-icon">🔐</div>
+      <h3>Player Area</h3>
+      <p>Only accessible after logging in. Redirects to /login if not authenticated.</p>
+      <div style="margin-top:14px;display:flex;flex-direction:column;gap:6px;">
+        <span style="font-size:13px;color:#f97316;font-family:monospace">/dashboard</span>
+        <span style="font-size:13px;color:#9ca3af;font-family:monospace">/reset-password</span>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-icon">🛡️</div>
+      <h3>Admin Area</h3>
+      <p>Only accessible to users with the admin role. Non-admins are redirected to /dashboard.</p>
+      <div style="margin-top:14px;display:flex;flex-direction:column;gap:6px;">
+        <span style="font-size:13px;color:#c084fc;font-family:monospace">/admin</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 3: INFOGRAPHIC -->
+<section id="infographic">
+  <div class="sec-label">Section 3</div>
+  <h2>Site <em>Infographic</em></h2>
+  <p class="sec-desc">A visual map of all user journeys and how the system components connect.</p>
+
+  <div class="diagram-wrap">
+    <svg viewBox="0 0 1020 740" xmlns="http://www.w3.org/2000/svg" style="width:100%;min-width:680px;display:block;">
+      <defs>
+        <marker id="arr" markerWidth="9" markerHeight="6" refX="9" refY="3" orient="auto">
+          <polygon points="0 0,9 3,0 6" fill="#f97316"/>
+        </marker>
+        <marker id="arr-g" markerWidth="9" markerHeight="6" refX="9" refY="3" orient="auto">
+          <polygon points="0 0,9 3,0 6" fill="#4b5563"/>
+        </marker>
+        <marker id="arr-p" markerWidth="9" markerHeight="6" refX="9" refY="3" orient="auto">
+          <polygon points="0 0,9 3,0 6" fill="#a855f7"/>
+        </marker>
+        <marker id="arr-b" markerWidth="9" markerHeight="6" refX="9" refY="3" orient="auto">
+          <polygon points="0 0,9 3,0 6" fill="#3b82f6"/>
+        </marker>
+        <filter id="glow"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+        <linearGradient id="oGrad" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#f97316" stop-opacity="0.3"/>
+          <stop offset="100%" stop-color="#f97316" stop-opacity="0"/>
+        </linearGradient>
+      </defs>
+
+      <!-- Background -->
+      <rect width="1020" height="740" fill="#111111" rx="16"/>
+
+      <!-- Title -->
+      <text x="510" y="38" text-anchor="middle" fill="#6b7280" font-size="11" font-family="sans-serif" letter-spacing="3" font-weight="700">DMV ALL STARS FC — SITE ARCHITECTURE &amp; USER FLOWS</text>
+
+      <!-- ══════════════════════════════ -->
+      <!-- COLUMN 1: USERS -->
+      <!-- ══════════════════════════════ -->
+      <text x="100" y="72" text-anchor="middle" fill="#4b5563" font-size="10" font-family="sans-serif" letter-spacing="2" font-weight="700">USERS</text>
+
+      <!-- Visitor -->
+      <rect x="30" y="82" width="140" height="70" rx="12" fill="#1a1a1a" stroke="#374151" stroke-width="1.5"/>
+      <text x="100" y="106" text-anchor="middle" font-size="22">👤</text>
+      <text x="100" y="126" text-anchor="middle" fill="#9ca3af" font-size="12" font-family="sans-serif" font-weight="700">VISITOR</text>
+      <text x="100" y="142" text-anchor="middle" fill="#4b5563" font-size="10" font-family="sans-serif">No account</text>
+
+      <!-- Player -->
+      <rect x="30" y="172" width="140" height="70" rx="12" fill="rgba(249,115,22,0.08)" stroke="rgba(249,115,22,0.4)" stroke-width="1.5" filter="url(#glow)"/>
+      <text x="100" y="196" text-anchor="middle" font-size="22">⚽</text>
+      <text x="100" y="216" text-anchor="middle" fill="#f97316" font-size="12" font-family="sans-serif" font-weight="700">PLAYER</text>
+      <text x="100" y="232" text-anchor="middle" fill="#4b5563" font-size="10" font-family="sans-serif">Registered</text>
+
+      <!-- Admin -->
+      <rect x="30" y="262" width="140" height="70" rx="12" fill="rgba(168,85,247,0.08)" stroke="rgba(168,85,247,0.4)" stroke-width="1.5"/>
+      <text x="100" y="286" text-anchor="middle" font-size="22">🛡️</text>
+      <text x="100" y="306" text-anchor="middle" fill="#c084fc" font-size="12" font-family="sans-serif" font-weight="700">ADMIN</text>
+      <text x="100" y="322" text-anchor="middle" fill="#4b5563" font-size="10" font-family="sans-serif">Elevated role</text>
+
+      <!-- ══════════════════════════════ -->
+      <!-- COLUMN 2: PUBLIC PAGES -->
+      <!-- ══════════════════════════════ -->
+      <text x="295" y="72" text-anchor="middle" fill="#4b5563" font-size="10" font-family="sans-serif" letter-spacing="2" font-weight="700">PUBLIC PAGES</text>
+
+      <!-- Pages box -->
+      <rect x="205" y="82" width="180" height="250" rx="12" fill="#1a1a1a" stroke="#374151" stroke-width="1"/>
+
+      <!-- Page items -->
+      <rect x="218" y="96" width="154" height="28" rx="6" fill="rgba(255,255,255,0.04)"/>
+      <text x="230" y="115" fill="#d1d5db" font-size="12" font-family="monospace">/ Home</text>
+
+      <rect x="218" y="130" width="154" height="28" rx="6" fill="rgba(255,255,255,0.04)"/>
+      <text x="230" y="149" fill="#d1d5db" font-size="12" font-family="monospace">/about</text>
+
+      <rect x="218" y="164" width="154" height="28" rx="6" fill="rgba(255,255,255,0.04)"/>
+      <text x="230" y="183" fill="#d1d5db" font-size="12" font-family="monospace">/gallery</text>
+
+      <rect x="218" y="198" width="154" height="28" rx="6" fill="rgba(255,255,255,0.04)"/>
+      <text x="230" y="217" fill="#d1d5db" font-size="12" font-family="monospace">/contact</text>
+
+      <rect x="218" y="232" width="154" height="28" rx="6" fill="rgba(249,115,22,0.08)" stroke="rgba(249,115,22,0.2)" stroke-width="1"/>
+      <text x="230" y="251" fill="#f97316" font-size="12" font-family="monospace">/register</text>
+
+      <rect x="218" y="266" width="154" height="28" rx="6" fill="rgba(249,115,22,0.08)" stroke="rgba(249,115,22,0.2)" stroke-width="1"/>
+      <text x="230" y="285" fill="#f97316" font-size="12" font-family="monospace">/login</text>
+
+      <rect x="218" y="300" width="154" height="22" rx="5" fill="rgba(255,255,255,0.02)"/>
+      <text x="230" y="315" fill="#4b5563" font-size="10" font-family="monospace">/terms  /privacy</text>
+
+      <!-- Visitor arrow to public pages -->
+      <line x1="170" y1="117" x2="205" y2="170" stroke="#6b7280" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arr-g)"/>
+      <!-- Player arrow to login/register -->
+      <line x1="170" y1="207" x2="205" y2="260" stroke="#f97316" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arr)"/>
+      <!-- Admin arrow -->
+      <line x1="170" y1="297" x2="205" y2="280" stroke="#a855f7" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arr-p)"/>
+
+      <!-- ══════════════════════════════ -->
+      <!-- COLUMN 3: AUTH FLOW -->
+      <!-- ══════════════════════════════ -->
+      <text x="510" y="72" text-anchor="middle" fill="#4b5563" font-size="10" font-family="sans-serif" letter-spacing="2" font-weight="700">AUTH FLOW</text>
+
+      <!-- Registration box -->
+      <rect x="420" y="82" width="180" height="150" rx="12" fill="rgba(249,115,22,0.05)" stroke="rgba(249,115,22,0.3)" stroke-width="1.5"/>
+      <text x="510" y="104" text-anchor="middle" fill="#fb923c" font-size="11" font-family="sans-serif" font-weight="800" letter-spacing="1">REGISTRATION</text>
+      <text x="435" y="124" fill="#9ca3af" font-size="11" font-family="sans-serif">① Name + Email + Password</text>
+      <text x="435" y="142" fill="#9ca3af" font-size="11" font-family="sans-serif">② Position + Age + Experience</text>
+      <text x="435" y="160" fill="#9ca3af" font-size="11" font-family="sans-serif">③ Parent/Guardian info</text>
+      <text x="435" y="178" fill="#9ca3af" font-size="11" font-family="sans-serif">④ Terms agreement</text>
+      <text x="435" y="196" fill="#f97316" font-size="11" font-family="sans-serif" font-weight="700">⑤ hCaptcha ✓  →  Submit</text>
+      <text x="435" y="218" fill="#4b5563" font-size="10" font-family="sans-serif">Password: 8+ chars, uppercase, number, symbol</text>
+
+      <!-- Login box -->
+      <rect x="420" y="248" width="180" height="100" rx="12" fill="rgba(249,115,22,0.05)" stroke="rgba(249,115,22,0.3)" stroke-width="1.5"/>
+      <text x="510" y="270" text-anchor="middle" fill="#fb923c" font-size="11" font-family="sans-serif" font-weight="800" letter-spacing="1">LOGIN</text>
+      <text x="435" y="290" fill="#9ca3af" font-size="11" font-family="sans-serif">① Email + Password</text>
+      <text x="435" y="308" fill="#f97316" font-size="11" font-family="sans-serif" font-weight="700">② hCaptcha ✓  →  Submit</text>
+      <text x="435" y="326" fill="#4b5563" font-size="10" font-family="sans-serif">"Forgot password?" → email link</text>
+
+      <!-- Arrow: public pages → auth flow -->
+      <line x1="385" y1="268" x2="420" y2="200" stroke="#f97316" stroke-width="1.5" marker-end="url(#arr)"/>
+      <line x1="385" y1="268" x2="420" y2="298" stroke="#f97316" stroke-width="1.5" marker-end="url(#arr)"/>
+
+      <!-- proxy.ts box -->
+      <rect x="420" y="368" width="180" height="60" rx="12" fill="rgba(239,68,68,0.07)" stroke="rgba(239,68,68,0.3)" stroke-width="1.5"/>
+      <text x="510" y="390" text-anchor="middle" fill="#f87171" font-size="12" font-family="sans-serif" font-weight="800">proxy.ts</text>
+      <text x="510" y="408" text-anchor="middle" fill="#9ca3af" font-size="10" font-family="sans-serif">Validates JWT session cookie</text>
+      <text x="510" y="422" text-anchor="middle" fill="#9ca3af" font-size="10" font-family="sans-serif">on every request</text>
+      <line x1="510" y1="348" x2="510" y2="368" stroke="#f97316" stroke-width="1.5" marker-end="url(#arr)"/>
+
+      <!-- ══════════════════════════════ -->
+      <!-- COLUMN 4: PROTECTED PAGES -->
+      <!-- ══════════════════════════════ -->
+      <text x="720" y="72" text-anchor="middle" fill="#4b5563" font-size="10" font-family="sans-serif" letter-spacing="2" font-weight="700">PROTECTED PAGES</text>
+
+      <!-- Dashboard -->
+      <rect x="630" y="82" width="180" height="110" rx="12" fill="rgba(249,115,22,0.07)" stroke="rgba(249,115,22,0.4)" stroke-width="1.5"/>
+      <text x="720" y="105" text-anchor="middle" fill="#f97316" font-size="12" font-family="sans-serif" font-weight="800">🏠 /dashboard</text>
+      <text x="645" y="125" fill="#9ca3af" font-size="11" font-family="sans-serif">• View own profile</text>
+      <text x="645" y="143" fill="#9ca3af" font-size="11" font-family="sans-serif">• Edit player details</text>
+      <text x="645" y="161" fill="#9ca3af" font-size="11" font-family="sans-serif">• View status (pending/active)</text>
+      <text x="645" y="179" fill="#4b5563" font-size="10" font-family="sans-serif">Authenticated users only</text>
+
+      <!-- Admin dashboard -->
+      <rect x="630" y="212" width="180" height="130" rx="12" fill="rgba(168,85,247,0.07)" stroke="rgba(168,85,247,0.4)" stroke-width="1.5"/>
+      <text x="720" y="235" text-anchor="middle" fill="#c084fc" font-size="12" font-family="sans-serif" font-weight="800">🛡️ /admin</text>
+      <text x="645" y="255" fill="#9ca3af" font-size="11" font-family="sans-serif">• All players list</text>
+      <text x="645" y="273" fill="#9ca3af" font-size="11" font-family="sans-serif">• Search &amp; filter</text>
+      <text x="645" y="291" fill="#9ca3af" font-size="11" font-family="sans-serif">• Change status/role</text>
+      <text x="645" y="309" fill="#9ca3af" font-size="11" font-family="sans-serif">• Player detail panel</text>
+      <text x="645" y="329" fill="#4b5563" font-size="10" font-family="sans-serif">Admin role only</text>
+
+      <!-- Arrows: proxy → pages -->
+      <line x1="600" y1="390" x2="720" y2="390" stroke="#f87171" stroke-width="1" stroke-dasharray="4,3"/>
+      <line x1="720" y1="390" x2="720" y2="342" stroke="#f87171" stroke-width="1.5" marker-end="url(#arr)"/>
+
+      <!-- Arrow auth → proxy -->
+      <path d="M600,298 C615,298 615,398 600,398" stroke="#f97316" stroke-width="1.5" fill="none" marker-end="url(#arr)"/>
+
+      <!-- ══════════════════════════════ -->
+      <!-- COLUMN 5: SUPABASE -->
+      <!-- ══════════════════════════════ -->
+      <text x="925" y="72" text-anchor="middle" fill="#4b5563" font-size="10" font-family="sans-serif" letter-spacing="2" font-weight="700">SUPABASE</text>
+
+      <!-- Supabase container -->
+      <rect x="840" y="82" width="160" height="360" rx="14" fill="rgba(34,197,94,0.04)" stroke="rgba(34,197,94,0.2)" stroke-width="1.5"/>
+
+      <!-- Auth.users -->
+      <rect x="854" y="98" width="132" height="55" rx="8" fill="#1a1a1a" stroke="rgba(34,197,94,0.3)" stroke-width="1"/>
+      <text x="920" y="118" text-anchor="middle" fill="#4ade80" font-size="11" font-family="sans-serif" font-weight="700">auth.users</text>
+      <text x="920" y="134" text-anchor="middle" fill="#6b7280" font-size="10" font-family="sans-serif">Email, password hash</text>
+      <text x="920" y="147" text-anchor="middle" fill="#6b7280" font-size="10" font-family="sans-serif">JWT session tokens</text>
+
+      <!-- Profiles table -->
+      <rect x="854" y="165" width="132" height="90" rx="8" fill="#1a1a1a" stroke="rgba(34,197,94,0.3)" stroke-width="1"/>
+      <text x="920" y="184" text-anchor="middle" fill="#4ade80" font-size="11" font-family="sans-serif" font-weight="700">profiles table</text>
+      <text x="920" y="200" text-anchor="middle" fill="#6b7280" font-size="10" font-family="sans-serif">name, email, phone</text>
+      <text x="920" y="214" text-anchor="middle" fill="#6b7280" font-size="10" font-family="sans-serif">position, age_group</text>
+      <text x="920" y="228" text-anchor="middle" fill="#6b7280" font-size="10" font-family="sans-serif">status, role</text>
+      <text x="920" y="244" text-anchor="middle" fill="#f97316" font-size="10" font-family="sans-serif" font-weight="600">Auto-created on signup ↑</text>
+
+      <!-- RLS -->
+      <rect x="854" y="267" width="132" height="55" rx="8" fill="rgba(239,68,68,0.06)" stroke="rgba(239,68,68,0.25)" stroke-width="1"/>
+      <text x="920" y="286" text-anchor="middle" fill="#f87171" font-size="11" font-family="sans-serif" font-weight="700">Row Level Security</text>
+      <text x="920" y="302" text-anchor="middle" fill="#6b7280" font-size="10" font-family="sans-serif">Players: own row only</text>
+      <text x="920" y="316" text-anchor="middle" fill="#6b7280" font-size="10" font-family="sans-serif">Admins: all rows</text>
+
+      <!-- hCaptcha verify -->
+      <rect x="854" y="334" width="132" height="45" rx="8" fill="rgba(168,85,247,0.06)" stroke="rgba(168,85,247,0.25)" stroke-width="1"/>
+      <text x="920" y="353" text-anchor="middle" fill="#c084fc" font-size="11" font-family="sans-serif" font-weight="700">hCaptcha verify</text>
+      <text x="920" y="368" text-anchor="middle" fill="#6b7280" font-size="10" font-family="sans-serif">Server-side bot check</text>
+
+      <!-- Auto-trigger -->
+      <rect x="854" y="391" width="132" height="42" rx="8" fill="rgba(34,197,94,0.06)" stroke="rgba(34,197,94,0.2)" stroke-width="1"/>
+      <text x="920" y="409" text-anchor="middle" fill="#4ade80" font-size="11" font-family="sans-serif" font-weight="700">DB Trigger</text>
+      <text x="920" y="424" text-anchor="middle" fill="#6b7280" font-size="10" font-family="sans-serif">Auto-creates profile row</text>
+
+      <!-- Arrows to Supabase -->
+      <line x1="810" y1="180" x2="854" y2="210" stroke="rgba(249,115,22,0.5)" stroke-width="1.5" marker-end="url(#arr)" stroke-dasharray="4,3"/>
+      <line x1="810" y1="298" x2="854" y2="298" stroke="rgba(34,197,94,0.5)" stroke-width="1.5" marker-end="url(#arr)" stroke-dasharray="4,3"/>
+
+      <!-- ══════════════════════════════ -->
+      <!-- BOTTOM: VERCEL HOSTING -->
+      <!-- ══════════════════════════════ -->
+      <rect x="30" y="470" width="980" height="90" rx="14" fill="rgba(59,130,246,0.04)" stroke="rgba(59,130,246,0.2)" stroke-width="1.5"/>
+      <text x="510" y="494" text-anchor="middle" fill="#60a5fa" font-size="11" font-family="sans-serif" font-weight="800" letter-spacing="2">VERCEL — HOSTING &amp; DEPLOYMENT</text>
+
+      <rect x="50" y="504" width="130" height="42" rx="8" fill="#1a1a1a" stroke="rgba(59,130,246,0.25)" stroke-width="1"/>
+      <text x="115" y="521" text-anchor="middle" fill="#60a5fa" font-size="11" font-family="sans-serif" font-weight="600">dmv-allstars.com</text>
+      <text x="115" y="537" text-anchor="middle" fill="#6b7280" font-size="10" font-family="sans-serif">Custom domain</text>
+
+      <rect x="200" y="504" width="130" height="42" rx="8" fill="#1a1a1a" stroke="rgba(59,130,246,0.25)" stroke-width="1"/>
+      <text x="265" y="521" text-anchor="middle" fill="#60a5fa" font-size="11" font-family="sans-serif" font-weight="600">Auto SSL / HTTPS</text>
+      <text x="265" y="537" text-anchor="middle" fill="#6b7280" font-size="10" font-family="sans-serif">Free certificate</text>
+
+      <rect x="350" y="504" width="130" height="42" rx="8" fill="#1a1a1a" stroke="rgba(59,130,246,0.25)" stroke-width="1"/>
+      <text x="415" y="521" text-anchor="middle" fill="#60a5fa" font-size="11" font-family="sans-serif" font-weight="600">Auto Deploy</text>
+      <text x="415" y="537" text-anchor="middle" fill="#6b7280" font-size="10" font-family="sans-serif">GitHub push → live</text>
+
+      <rect x="500" y="504" width="130" height="42" rx="8" fill="#1a1a1a" stroke="rgba(59,130,246,0.25)" stroke-width="1"/>
+      <text x="565" y="521" text-anchor="middle" fill="#60a5fa" font-size="11" font-family="sans-serif" font-weight="600">Static Pages</text>
+      <text x="565" y="537" text-anchor="middle" fill="#6b7280" font-size="10" font-family="sans-serif">Pre-rendered at build</text>
+
+      <rect x="650" y="504" width="130" height="42" rx="8" fill="#1a1a1a" stroke="rgba(59,130,246,0.25)" stroke-width="1"/>
+      <text x="715" y="521" text-anchor="middle" fill="#60a5fa" font-size="11" font-family="sans-serif" font-weight="600">Dynamic Pages</text>
+      <text x="715" y="537" text-anchor="middle" fill="#6b7280" font-size="10" font-family="sans-serif">/dashboard /admin</text>
+
+      <rect x="800" y="504" width="185" height="42" rx="8" fill="#1a1a1a" stroke="rgba(59,130,246,0.25)" stroke-width="1"/>
+      <text x="893" y="521" text-anchor="middle" fill="#60a5fa" font-size="11" font-family="sans-serif" font-weight="600">Global CDN</text>
+      <text x="893" y="537" text-anchor="middle" fill="#6b7280" font-size="10" font-family="sans-serif">Fast worldwide delivery</text>
+
+      <!-- ══════════════════════════════ -->
+      <!-- BOTTOM: LEGEND -->
+      <!-- ══════════════════════════════ -->
+      <rect x="30" y="580" width="980" height="140" rx="14" fill="#111111" stroke="#1f2937" stroke-width="1"/>
+      <text x="510" y="604" text-anchor="middle" fill="#4b5563" font-size="10" font-family="sans-serif" letter-spacing="3" font-weight="700">LEGEND &amp; KEY FACTS</text>
+
+      <!-- Legend items -->
+      <circle cx="65" cy="628" r="5" fill="#f97316"/>
+      <text x="78" y="632" fill="#9ca3af" font-size="11" font-family="sans-serif">Player flow</text>
+      <circle cx="165" cy="628" r="5" fill="#a855f7"/>
+      <text x="178" y="632" fill="#9ca3af" font-size="11" font-family="sans-serif">Admin flow</text>
+      <circle cx="265" cy="628" r="5" fill="#4ade80"/>
+      <text x="278" y="632" fill="#9ca3af" font-size="11" font-family="sans-serif">Database</text>
+      <circle cx="355" cy="628" r="5" fill="#f87171"/>
+      <text x="368" y="632" fill="#9ca3af" font-size="11" font-family="sans-serif">Route protection</text>
+      <circle cx="475" cy="628" r="5" fill="#60a5fa"/>
+      <text x="488" y="632" fill="#9ca3af" font-size="11" font-family="sans-serif">Hosting / CDN</text>
+      <circle cx="575" cy="628" r="5" fill="#c084fc"/>
+      <text x="588" y="632" fill="#9ca3af" font-size="11" font-family="sans-serif">Bot protection</text>
+
+      <!-- Key facts -->
+      <rect x="50" y="648" width="200" height="58" rx="8" fill="#1a1a1a" stroke="#1f2937" stroke-width="1"/>
+      <text x="150" y="666" text-anchor="middle" fill="#f97316" font-size="18" font-family="sans-serif" font-weight="900">14</text>
+      <text x="150" y="682" text-anchor="middle" fill="#9ca3af" font-size="11" font-family="sans-serif">Total Pages</text>
+      <text x="150" y="698" text-anchor="middle" fill="#4b5563" font-size="10" font-family="sans-serif">8 public · 1 player · 1 admin</text>
+
+      <rect x="268" y="648" width="200" height="58" rx="8" fill="#1a1a1a" stroke="#1f2937" stroke-width="1"/>
+      <text x="368" y="666" text-anchor="middle" fill="#f97316" font-size="18" font-family="sans-serif" font-weight="900">3</text>
+      <text x="368" y="682" text-anchor="middle" fill="#9ca3af" font-size="11" font-family="sans-serif">User Roles</text>
+      <text x="368" y="698" text-anchor="middle" fill="#4b5563" font-size="10" font-family="sans-serif">Visitor · Player · Admin</text>
+
+      <rect x="486" y="648" width="200" height="58" rx="8" fill="#1a1a1a" stroke="#1f2937" stroke-width="1"/>
+      <text x="586" y="666" text-anchor="middle" fill="#f97316" font-size="18" font-family="sans-serif" font-weight="900">RLS</text>
+      <text x="586" y="682" text-anchor="middle" fill="#9ca3af" font-size="11" font-family="sans-serif">Data Protection</text>
+      <text x="586" y="698" text-anchor="middle" fill="#4b5563" font-size="10" font-family="sans-serif">Players see only own data</text>
+
+      <rect x="704" y="648" width="296" height="58" rx="8" fill="#1a1a1a" stroke="#1f2937" stroke-width="1"/>
+      <text x="852" y="666" text-anchor="middle" fill="#f97316" font-size="18" font-family="sans-serif" font-weight="900">Auto</text>
+      <text x="852" y="682" text-anchor="middle" fill="#9ca3af" font-size="11" font-family="sans-serif">Profile Creation</text>
+      <text x="852" y="698" text-anchor="middle" fill="#4b5563" font-size="10" font-family="sans-serif">DB trigger creates profile on signup</text>
+    </svg>
+  </div>
+</section>
+
+<!-- SECTION 4: HOW REGISTRATION WORKS -->
+<section id="registration">
+  <div class="sec-label">Section 4</div>
+  <h2>How <em>Registration</em> Works</h2>
+  <p class="sec-desc">Players register in a 2-step process with bot protection and strong password requirements.</p>
+  <div class="steps">
+    <div class="step">
+      <div class="step-left"><div class="step-num">1</div><div class="step-line"></div></div>
+      <div class="step-body">
+        <h3>Account Details</h3>
+        <p>Player enters their first name, last name, email address, and creates a password. The password must be at least 8 characters and include an uppercase letter, a number, and a special character. A real-time strength meter shows how strong the password is. A confirm password field with a match indicator prevents typos.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-left"><div class="step-num">2</div><div class="step-line"></div></div>
+      <div class="step-body">
+        <h3>Player Information</h3>
+        <p>Player fills in their date of birth, phone number, playing position, age group, and years of experience. For players under 18, a parent/guardian name, phone, and emergency contact are collected. Phone numbers are validated against a standard format.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-left"><div class="step-num">3</div><div class="step-line"></div></div>
+      <div class="step-body">
+        <h3>Terms Agreement &amp; CAPTCHA</h3>
+        <p>The player must check a box agreeing to the <code>Terms of Service</code> and <code>Privacy Policy</code>. They then complete an hCaptcha challenge to prove they are human. The Register button stays disabled until both are done.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-left"><div class="step-num">4</div><div class="step-line"></div></div>
+      <div class="step-body">
+        <h3>Account Created Automatically</h3>
+        <p>Supabase creates the user account and a database trigger automatically creates a <code>profiles</code> row linked to the new account. The player details are then saved into that profile. This ensures the player always has a profile even if the connection drops mid-registration.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-left"><div class="step-num">5</div><div class="step-line"></div></div>
+      <div class="step-body">
+        <h3>Redirected to Dashboard</h3>
+        <p>After successful registration, the player is automatically signed in and redirected to their personal <code>/dashboard</code> page where they can view and edit their profile.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 5: HOW LOGIN WORKS -->
+<section id="login">
+  <div class="sec-label">Section 5</div>
+  <h2>How <em>Login</em> Works</h2>
+  <p class="sec-desc">Login is protected by hCaptcha and a server-side route guard on every request.</p>
+  <div class="steps">
+    <div class="step">
+      <div class="step-left"><div class="step-num">1</div><div class="step-line"></div></div>
+      <div class="step-body">
+        <h3>Enter Credentials</h3>
+        <p>Player enters their email and password. A toggle button reveals or hides the password. A "Forgot password?" link is available to start a self-service reset flow.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-left"><div class="step-num">2</div><div class="step-line"></div></div>
+      <div class="step-body">
+        <h3>Complete CAPTCHA</h3>
+        <p>The player solves the hCaptcha challenge. The token generated is sent along with the login request. Supabase verifies this token on the server — it cannot be bypassed by disabling JavaScript.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-left"><div class="step-num">3</div><div class="step-line"></div></div>
+      <div class="step-body">
+        <h3>Supabase Issues a Session</h3>
+        <p>Supabase validates the credentials and issues a JWT (JSON Web Token) session cookie. This cookie is stored securely in the browser and sent automatically on every subsequent request.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-left"><div class="step-num">4</div><div class="step-line"></div></div>
+      <div class="step-body">
+        <h3>Route Guard Checks Every Request</h3>
+        <p>A server-side file called <code>proxy.ts</code> runs before every page loads. It reads the session cookie to confirm the user is logged in. If they are not, they are redirected to <code>/login</code>. If they try to access <code>/admin</code> without the admin role, they are redirected to <code>/dashboard</code>.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-left"><div class="step-num">5</div><div class="step-line"></div></div>
+      <div class="step-body">
+        <h3>Dashboard or Admin Loads</h3>
+        <p>Authenticated players see <code>/dashboard</code> with only their own data. Admins see an additional <strong>Admin</strong> link in the navbar and can access <code>/admin</code> to manage all players.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 6: FLOW DIAGRAMS -->
+<section id="flows">
+  <div class="sec-label">Section 6</div>
+  <h2>User <em>Flow Diagrams</em></h2>
+  <p class="sec-desc">Step-by-step journeys for each user type.</p>
+
+  <div style="margin-bottom:32px;">
+    <h3 style="font-size:15px;font-weight:800;color:#9ca3af;text-transform:uppercase;letter-spacing:.1em;margin-bottom:16px;">👤 Visitor</h3>
+    <div class="flow-row">
+      <div class="flow-box"><div class="fb-icon">🌐</div><div class="fb-title">Opens Site</div><div class="fb-sub">dmv-allstars.com</div></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box"><div class="fb-icon">🏠</div><div class="fb-title">Home Page</div><div class="fb-sub">Hero + Stats</div></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box"><div class="fb-icon">📄</div><div class="fb-title">Browse Pages</div><div class="fb-sub">About / Gallery</div></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box active"><div class="fb-icon">📝</div><div class="fb-title">Register CTA</div><div class="fb-sub">Clicks button</div></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box active"><div class="fb-icon">✅</div><div class="fb-title">Becomes Player</div><div class="fb-sub">Account created</div></div>
+    </div>
+  </div>
+
+  <div style="margin-bottom:32px;">
+    <h3 style="font-size:15px;font-weight:800;color:#f97316;text-transform:uppercase;letter-spacing:.1em;margin-bottom:16px;">⚽ Player</h3>
+    <div class="flow-row">
+      <div class="flow-box active"><div class="fb-icon">🔑</div><div class="fb-title">Login</div><div class="fb-sub">Email + Password</div></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box active"><div class="fb-icon">🤖</div><div class="fb-title">hCaptcha</div><div class="fb-sub">Verified ✓</div></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box active"><div class="fb-icon">🛡️</div><div class="fb-title">proxy.ts</div><div class="fb-sub">JWT validated</div></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box active"><div class="fb-icon">🏠</div><div class="fb-title">Dashboard</div><div class="fb-sub">Own profile</div></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box active"><div class="fb-icon">✏️</div><div class="fb-title">Edit Profile</div><div class="fb-sub">Saved to DB</div></div>
+    </div>
+  </div>
+
+  <div>
+    <h3 style="font-size:15px;font-weight:800;color:#c084fc;text-transform:uppercase;letter-spacing:.1em;margin-bottom:16px;">🛡️ Admin</h3>
+    <div class="flow-row">
+      <div class="flow-box" style="border-color:rgba(168,85,247,.35);background:rgba(168,85,247,.06)"><div class="fb-icon">🔑</div><div class="fb-title">Login</div><div class="fb-sub">Admin account</div></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box" style="border-color:rgba(168,85,247,.35);background:rgba(168,85,247,.06)"><div class="fb-icon">🔍</div><div class="fb-title">Role Check</div><div class="fb-sub">role = admin</div></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box" style="border-color:rgba(168,85,247,.35);background:rgba(168,85,247,.06)"><div class="fb-icon">📊</div><div class="fb-title">Admin Panel</div><div class="fb-sub">All players</div></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box" style="border-color:rgba(168,85,247,.35);background:rgba(168,85,247,.06)"><div class="fb-icon">⚙️</div><div class="fb-title">Manage</div><div class="fb-sub">Status / Role</div></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box" style="border-color:rgba(168,85,247,.35);background:rgba(168,85,247,.06)"><div class="fb-icon">💾</div><div class="fb-title">Saved</div><div class="fb-sub">Supabase DB</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 7: TECHNOLOGY -->
+<section id="technology">
+  <div class="sec-label">Section 7</div>
+  <h2>Technology <em>Stack</em></h2>
+  <p class="sec-desc">Every tool used to build, protect, and host the site.</p>
+  <div class="tech-grid">
+    <div class="tech-card">
+      <div class="tech-icon" style="background:rgba(249,115,22,.1);border:1px solid rgba(249,115,22,.2)">⚡</div>
+      <div><div class="tech-name">Next.js 16</div><div class="tech-desc">App Router with Server + Client Components. Turbopack build system.</div></div>
+    </div>
+    <div class="tech-card">
+      <div class="tech-icon" style="background:rgba(34,197,94,.08);border:1px solid rgba(34,197,94,.2)">🗄️</div>
+      <div><div class="tech-name">Supabase</div><div class="tech-desc">PostgreSQL database, JWT auth, Row Level Security, email reset.</div></div>
+    </div>
+    <div class="tech-card">
+      <div class="tech-icon" style="background:rgba(59,130,246,.08);border:1px solid rgba(59,130,246,.2)">🌐</div>
+      <div><div class="tech-name">Vercel</div><div class="tech-desc">Serverless hosting with global CDN, auto SSL, CI/CD from GitHub.</div></div>
+    </div>
+    <div class="tech-card">
+      <div class="tech-icon" style="background:rgba(168,85,247,.08);border:1px solid rgba(168,85,247,.2)">🤖</div>
+      <div><div class="tech-name">hCaptcha</div><div class="tech-desc">Bot protection on login and registration. Server-verified tokens.</div></div>
+    </div>
+    <div class="tech-card">
+      <div class="tech-icon" style="background:rgba(249,115,22,.08);border:1px solid rgba(249,115,22,.15)">🎨</div>
+      <div><div class="tech-name">Tailwind CSS v4</div><div class="tech-desc">Utility-first styling. No config file — uses @theme in CSS.</div></div>
+    </div>
+    <div class="tech-card">
+      <div class="tech-icon" style="background:rgba(59,130,246,.08);border:1px solid rgba(59,130,246,.15)">🔷</div>
+      <div><div class="tech-name">TypeScript</div><div class="tech-desc">Full type safety across all components and database calls.</div></div>
+    </div>
+    <div class="tech-card">
+      <div class="tech-icon" style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1)">🐙</div>
+      <div><div class="tech-name">GitHub</div><div class="tech-desc">Source at ptkoroma/dmv-allstars. Every push auto-deploys.</div></div>
+    </div>
+    <div class="tech-card">
+      <div class="tech-icon" style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1)">🔤</div>
+      <div><div class="tech-name">Geist Font</div><div class="tech-desc">Google Fonts via next/font — zero layout shift on load.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 8: QUICK FACTS -->
+<section id="facts">
+  <div class="sec-label">Section 8</div>
+  <h2>Quick <em>Facts</em></h2>
+  <div class="grid g4">
+    {[
+      ['14','Total pages'],['3','User roles'],['2-step','Registration'],['8+','Password min chars'],
+      ['RLS','Database security'],['Auto','Profile creation'],['hCaptcha','Bot protection'],['HTTPS','Always encrypted']
+    ].map(([v,l])=>'')}
+    <div class="card" style="text-align:center;padding:24px 16px;">
+      <div style="font-size:32px;font-weight:900;color:#f97316">14</div>
+      <div style="color:#9ca3af;font-size:13px;margin-top:4px">Total pages</div>
+    </div>
+    <div class="card" style="text-align:center;padding:24px 16px;">
+      <div style="font-size:32px;font-weight:900;color:#f97316">3</div>
+      <div style="color:#9ca3af;font-size:13px;margin-top:4px">User roles</div>
+    </div>
+    <div class="card" style="text-align:center;padding:24px 16px;">
+      <div style="font-size:32px;font-weight:900;color:#f97316">2-step</div>
+      <div style="color:#9ca3af;font-size:13px;margin-top:4px">Registration</div>
+    </div>
+    <div class="card" style="text-align:center;padding:24px 16px;">
+      <div style="font-size:32px;font-weight:900;color:#f97316">8+</div>
+      <div style="color:#9ca3af;font-size:13px;margin-top:4px">Password min chars</div>
+    </div>
+    <div class="card" style="text-align:center;padding:24px 16px;">
+      <div style="font-size:28px;font-weight:900;color:#f97316">RLS</div>
+      <div style="color:#9ca3af;font-size:13px;margin-top:4px">Database security</div>
+    </div>
+    <div class="card" style="text-align:center;padding:24px 16px;">
+      <div style="font-size:24px;font-weight:900;color:#f97316">Auto</div>
+      <div style="color:#9ca3af;font-size:13px;margin-top:4px">Profile creation</div>
+    </div>
+    <div class="card" style="text-align:center;padding:24px 16px;">
+      <div style="font-size:24px;font-weight:900;color:#f97316">hCaptcha</div>
+      <div style="color:#9ca3af;font-size:13px;margin-top:4px">Bot protection</div>
+    </div>
+    <div class="card" style="text-align:center;padding:24px 16px;">
+      <div style="font-size:24px;font-weight:900;color:#f97316">HTTPS</div>
+      <div style="color:#9ca3af;font-size:13px;margin-top:4px">Always encrypted</div>
+    </div>
+  </div>
+</section>
+
+</div><!-- /wrap -->
+
+<footer>
+  <p>DMV All Stars FC &nbsp;·&nbsp; <strong>dmv-allstars.com</strong> &nbsp;·&nbsp; March 2026</p>
+</footer>
+
+</body>
+</html>
